@@ -2,10 +2,10 @@
 
 ## 👥 Membros do Projeto
 
-- **Allysson** - [@allyssonifx](https://github.com/allyssonifx)  
+- **Allysson Muniz** - [@allyssonifx](https://github.com/allyssonifx)  
 - **Lucas Chaves** - [@lucaschavessf](https://github.com/lucaschavessf)  
-- **Fernando** - [@Fernando2732](https://github.com/Fernando2732)  
-- **Matheus A. S.** - [@MatheusAS1](https://github.com/MatheusAS1)
+- **Fernando Marinho** - [@Fernando2732](https://github.com/Fernando2732)  
+- **Matheus Andrade** - [@MatheusAS1](https://github.com/MatheusAS1)
 
 ## 🧠 Disciplina
 
