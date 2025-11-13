@@ -23,7 +23,7 @@
 #define HIDECURSOR     "[?25l"
 #define CLEARSCREEN    "[2J"
 
-// BOX Drawing - Unix like terminals
+
 #define BOX_ENABLE     "(0"
 #define BOX_DISABLE    "(B"
 #define BOX_VLINE      0x78
