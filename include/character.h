@@ -10,7 +10,8 @@ typedef struct {
     int y;
     const char *appearance;
     int dir_x; 
-    int dir_y;  
+    int dir_y;
+    int lives;
 } Character;
 
 void characterInit(Character *c, int x, int y, const char *appearance);
@@ -25,7 +26,6 @@ void characterMove(Character *c, int dx, int dy);
 void characterSetPos(Character *c, int x, int y);
 void characterGetPos(const Character *c, int *x, int *y);
 
-/* Set/Get the last movement direction */
 void characterSetDir(Character *c, int dx, int dy);
 void characterGetDir(const Character *c, int *dx, int *dy);
 

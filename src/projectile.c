@@ -2,96 +2,147 @@
 #include "screen.h"
 #include <string.h>
 
-void projectileManagerInit(ProjectileManager *pm)
+void gerenciadorProjetilIniciar(GerenciadorProjetil *gp)
 {
-    if (!pm) return;
-    pm->count = 0;
-    memset(pm->projectiles, 0, sizeof(pm->projectiles));
+    if (!gp) return;
+    gp->quantidade_simples = 0;
+    gp->quantidade_especial = 0;
+    memset(gp->projeteis, 0, sizeof(gp->projeteis));
 }
 
-void projectileManagerDestroy(ProjectileManager *pm)
+void gerenciadorProjetilDestruir(GerenciadorProjetil *gp)
 {
-    (void)pm;
+    (void)gp;
 }
 
-void projectileCreate(ProjectileManager *pm, int x, int y, int dx, int dy)
+void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
 {
-    if (!pm || pm->count >= MAX_PROJECTILES) return;
-    
-    Projectile *p = &pm->projectiles[pm->count];
+    if (!gp || gp->quantidade_simples >= MAX_PROJETIL_SIMPLES) return;
+
+    int idx = gp->quantidade_simples;
+    Projetil *p = &gp->projeteis[idx];
     p->x = x;
     p->y = y;
     p->dx = dx;
     p->dy = dy;
-    p->active = 1;
-    p->appearance = "*";
-    p->frame_counter = 0;
-    
-    pm->count++;
+    p->ativo = 1;
+    p->aparencia = "*";
+    p->contador_frames = 0;
+    p->velocidade = VELOCIDADE_PROJETIL;
+    p->dano = 1;
+
+    gp->quantidade_simples++;
 }
 
-void projectileManagerDraw(const ProjectileManager *pm)
+void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
 {
-    if (!pm) return;
-    
-    for (int i = 0; i < pm->count; ++i) {
-        const Projectile *p = &pm->projectiles[i];
-        if (p->active) {
+    if (!gp || gp->quantidade_especial >= MAX_PROJETIL_ESPECIAL) return;
+
+    int idx = MAX_PROJETIL_SIMPLES + gp->quantidade_especial;
+    Projetil *p = &gp->projeteis[idx];
+    p->x = x;
+    p->y = y;
+    p->dx = dx;
+    p->dy = dy;
+    p->ativo = 1;
+    p->aparencia = "o";
+    p->contador_frames = 0;
+    p->velocidade = VELOCIDADE_PROJETIL * 3; 
+    p->dano = 3;
+
+    gp->quantidade_especial++;
+}
+
+void gerenciadorProjetilDesenhar(const GerenciadorProjetil *gp)
+{
+    if (!gp) return;
+
+    for (int i = 0; i < gp->quantidade_simples; ++i) {
+        const Projetil *p = &gp->projeteis[i];
+        if (p->ativo) {
             screenGotoxy(p->x, p->y);
             screenSetColor(WHITE, DARKGRAY);
-            printf("%s", p->appearance);
+            printf("%s", p->aparencia);
+        }
+    }
+    for (int i = 0; i < gp->quantidade_especial; ++i) {
+        const Projetil *p = &gp->projeteis[MAX_PROJETIL_SIMPLES + i];
+        if (p->ativo) {
+            screenGotoxy(p->x, p->y);
+            screenSetColor(WHITE, DARKGRAY);
+            printf("%s", p->aparencia);
         }
     }
 }
 
-void projectileManagerClear(const ProjectileManager *pm)
+void gerenciadorProjetilLimpar(const GerenciadorProjetil *gp)
 {
-    if (!pm) return;
-    
-    for (int i = 0; i < pm->count; ++i) {
-        const Projectile *p = &pm->projectiles[i];
-        if (p->active) {
+    if (!gp) return;
+
+    for (int i = 0; i < gp->quantidade_simples; ++i) {
+        const Projetil *p = &gp->projeteis[i];
+        if (p->ativo) {
+            screenGotoxy(p->x, p->y);
+            printf(" ");
+        }
+    }
+    for (int i = 0; i < gp->quantidade_especial; ++i) {
+        const Projetil *p = &gp->projeteis[MAX_PROJETIL_SIMPLES + i];
+        if (p->ativo) {
             screenGotoxy(p->x, p->y);
             printf(" ");
         }
     }
 }
 
-void projectileManagerUpdate(ProjectileManager *pm)
+void gerenciadorProjetilAtualizar(GerenciadorProjetil *gp)
 {
-    if (!pm) return;
-    
-    for (int i = 0; i < pm->count; ++i) {
-        Projectile *p = &pm->projectiles[i];
-        if (!p->active) continue;
-        
-        p->frame_counter++;
-        
-        if (p->frame_counter >= PROJECTILE_SPEED) {
-            p->x += p->dx;
-            p->y += p->dy;
-            p->frame_counter = 0;
-        }
-        
-        /* deactivate if out of bounds (with some margin for edge safety) */
+    if (!gp) return;
+
+    for (int i = 0; i < gp->quantidade_simples; ++i) {
+        Projetil *p = &gp->projeteis[i];
+        if (!p->ativo) continue;
+        p->x += p->dx;
+        p->y += p->dy;
         if (p->x < MINX + 1 || p->x > MAXX - 3 || p->y < MINY + 1 || p->y > MAXY - 1) {
-            p->active = 0;
+            p->ativo = 0;
+        }
+    }
+    for (int i = 0; i < gp->quantidade_especial; ++i) {
+        Projetil *p = &gp->projeteis[MAX_PROJETIL_SIMPLES + i];
+        if (!p->ativo) continue;
+        p->x += p->dx;
+        p->y += p->dy;
+        if (p->x < MINX + 1 || p->x > MAXX - 3 || p->y < MINY + 1 || p->y > MAXY - 1) {
+            p->ativo = 0;
         }
     }
 }
 
-void projectileManagerCompact(ProjectileManager *pm)
+void gerenciadorProjetilCompactar(GerenciadorProjetil *gp)
 {
-    if (!pm) return;
-    
+    if (!gp) return;
+
     int j = 0;
-    for (int i = 0; i < pm->count; ++i) {
-        if (pm->projectiles[i].active) {
+    for (int i = 0; i < gp->quantidade_simples; ++i) {
+        if (gp->projeteis[i].ativo) {
             if (i != j) {
-                pm->projectiles[j] = pm->projectiles[i];
+                gp->projeteis[j] = gp->projeteis[i];
             }
             j++;
         }
     }
-    pm->count = j;
+    gp->quantidade_simples = j;
+
+    j = 0;
+    for (int i = 0; i < gp->quantidade_especial; ++i) {
+        int idx = MAX_PROJETIL_SIMPLES + i;
+        if (gp->projeteis[idx].ativo) {
+            if (idx != MAX_PROJETIL_SIMPLES + j) {
+                gp->projeteis[MAX_PROJETIL_SIMPLES + j] = gp->projeteis[idx];
+            }
+            j++;
+        }
+    }
+    gp->quantidade_especial = j;
 }

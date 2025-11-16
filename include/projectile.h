@@ -1,5 +1,5 @@
-#ifndef __PROJECTILE_H__
-#define __PROJECTILE_H__
+#ifndef __PROJETIL_H__
+#define __PROJETIL_H__
 
 #include <stdio.h>
 
@@ -8,32 +8,36 @@ typedef struct {
     int y;
     int dx;       
     int dy;        
-    int active;    
-    const char *appearance; 
-    int frame_counter; 
-} Projectile;
+    int ativo;    
+    const char *aparencia; 
+    int contador_frames; 
+    int velocidade;
+    int dano;
+} Projetil;
 
 
-#define MAX_PROJECTILES 5
-
-
-#define PROJECTILE_SPEED 500
+#define MAX_PROJETIL_SIMPLES 10
+#define MAX_PROJETIL_ESPECIAL 8
+#define VELOCIDADE_PROJETIL 1
 
 typedef struct {
-    Projectile projectiles[MAX_PROJECTILES];
-    int count; 
-} ProjectileManager;
+    Projetil projeteis[MAX_PROJETIL_SIMPLES + MAX_PROJETIL_ESPECIAL];
+    int quantidade_simples;
+    int quantidade_especial; 
+} GerenciadorProjetil;
 
 
-void projectileManagerInit(ProjectileManager *pm);
-void projectileManagerDestroy(ProjectileManager *pm);
+void gerenciadorProjetilIniciar(GerenciadorProjetil *gp);
+void gerenciadorProjetilDestruir(GerenciadorProjetil *gp);
 
-void projectileCreate(ProjectileManager *pm, int x, int y, int dx, int dy);
-void projectileManagerDraw(const ProjectileManager *pm);
+void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy);
+void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy);
 
-void projectileManagerClear(const ProjectileManager *pm);
-void projectileManagerUpdate(ProjectileManager *pm);
+void gerenciadorProjetilDesenhar(const GerenciadorProjetil *gp);
 
-void projectileManagerCompact(ProjectileManager *pm);
+void gerenciadorProjetilLimpar(const GerenciadorProjetil *gp);
+void gerenciadorProjetilAtualizar(GerenciadorProjetil *gp);
+
+void gerenciadorProjetilCompactar(GerenciadorProjetil *gp);
 
 #endif
