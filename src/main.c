@@ -1,12 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h> // Adicionado para rand()
-#include <unistd.h> // Adicionado para a função sleep()
+#include <stdlib.h>
+#include <unistd.h>
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
 #include "character.h"
 #include "projectile.h"
 #include "enemy.h"
+#include "npc.h"
 
 int main()
 {
@@ -18,15 +19,17 @@ int main()
     
     int contador_frames = 0;
     int fps_atual = 0;
-    int base_enemy_count = 2; 
-    int base_enemy_life = 2;  
-    int base_boss_life = 10;  
-    int level = 1;          
+    int base_enemy_count = 2;
+    int base_enemy_life = 2;
+    int base_boss_life = 10;
+    int level = 1;
     int boss_spawned = 0;
     int boss_timer = 0;
     int score = 0;
-    int velocidade_inicial = 10; 
+    int velocidade_inicial = 10;
 
+    exibirTelaIntroducao();
+    
     screenInit(1);
     keyboardInit();
     timerInit(50);
@@ -34,12 +37,12 @@ int main()
     gerenciadorInimigoIniciar(&gi, base_enemy_count * level);
 
     characterInit(&jogador, 40, 12, "(-_-)/*");
-    jogador.lives = 3; 
+    jogador.lives = 3;
     characterDraw(&jogador);
     screenUpdate();
 
     for (int i = 0; i < base_enemy_count * level; ++i) {
-        int x = (rand() % (MAXX - MINX - 6)) + MINX + 2; 
+        int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
         inimigoSpawn(&gi, x, y, base_enemy_life * level, velocidade_inicial - (level > 1 ? level-1 : 0));
     }
@@ -47,22 +50,19 @@ int main()
     while (tecla != 27 && jogador.lives > 0)
     {
         if (timerTimeOver()) {
-
-        int px, py; 
-
+        int px, py;
 
         characterClear(&jogador);
         gerenciadorProjetilLimpar(&gp);
         gerenciadorInimigoLimpar(&gi);
         bossLimpar(&boss);
 
-
         tecla = 0;
         while (keyhit()) {
             tecla = readch();
         }
 
-        if (tecla) { 
+        if (tecla) {
             if (tecla == 'w') {
                 characterMove(&jogador, 0, -1);
                 characterSetDir(&jogador, 0, -1);
@@ -81,10 +81,8 @@ int main()
                 int px, py, dir_x, dir_y;
                 characterGetPos(&jogador, &px, &py);
                 characterGetDir(&jogador, &dir_x, &dir_y);
-                
-                int spawn_x = px + (dir_x * 7);  
-                int spawn_y = py + (dir_y * 2);  
-                
+                int spawn_x = px + (dir_x * 7);
+                int spawn_y = py + (dir_y * 2);
                 projetilCriar(&gp, spawn_x, spawn_y, dir_x, dir_y);
             }
 
@@ -114,7 +112,7 @@ int main()
         if (!boss_spawned && gi.quantidade == 0) {
             boss_timer++;
             if (boss_timer >= 100) {
-                bossIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, base_boss_life * (1 << (level-1)), velocidade_inicial - (level > 1 ? (level-1) * 2 : 0)); // Boss escala velocidade mais rápido
+                bossIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, base_boss_life * (1 << (level-1)), velocidade_inicial - (level > 1 ? (level-1) * 2 : 0));
                 boss_spawned = 1;
             }
         } else if (gi.quantidade > 0) {
@@ -130,13 +128,13 @@ int main()
             if (!ini->ativo) continue;
             if (px < ini->x + 5 && px + 8 > ini->x && py == ini->y) {
                 jogador.lives--;
-                ini->ativo = 0; 
+                ini->ativo = 0;
             }
         }
 
         if (boss_spawned && boss.ativo) {
             if (px < boss.x + 8 && px + 8 > boss.x && py == boss.y) {
-                jogador.lives = 0; 
+                jogador.lives = 0;
             }
         }
 
@@ -149,9 +147,12 @@ int main()
                 if (!ini->ativo) continue;
                 if (p->y == ini->y && p->x >= ini->x && p->x < ini->x + 5) {
                     ini->vida -= p->dano;
-                    p->ativo = 0; 
-                    if (ini->vida <= 0) { ini->ativo = 0; score++; }
-                    break; 
+                    p->ativo = 0;
+                    if (ini->vida <= 0) {
+                        ini->ativo = 0;
+                        score++;
+                    }
+                    break;
                 }
             }
 
@@ -175,8 +176,11 @@ int main()
                 if (!ini->ativo) continue;
                 if (p->y == ini->y && p->x >= ini->x && p->x < ini->x + 5) {
                     ini->vida -= p->dano;
-                    p->ativo = 0; 
-                    if (ini->vida <= 0) { ini->ativo = 0; score++; }
+                    p->ativo = 0;
+                    if (ini->vida <= 0) {
+                        ini->ativo = 0;
+                        score++;
+                    }
                     break;
                 }
             }
@@ -186,15 +190,15 @@ int main()
                     p->ativo = 0;
                     if (boss.vida <= 0) {
                         boss.ativo = 0;
-                        score += 10; 
+                        score += 10;
                     }
                 }
             }
         }
+        
         if (boss_spawned && !boss.ativo) {
             level++;
             int new_enemy_count = base_enemy_count * level;
-
 
             gerenciadorInimigoDestruir(&gi);
             gerenciadorInimigoIniciar(&gi, new_enemy_count);
@@ -221,23 +225,22 @@ int main()
 
         gerenciadorProjetilCompactar(&gp);
         gerenciadorInimigoCompactar(&gi);
-        
+
         contador_frames++;
-        if (contador_frames >= 20) {  
+        if (contador_frames >= 20) {
             fps_atual = contador_frames;
             contador_frames = 0;
         }
-        
-        screenGotoxy(70, 1);
-        screenSetColor(GREEN, DARKGRAY);
-        printf("Score: %d | Level: %d | Vidas: %d | Inimigos: %d | Boss Vida: %d | FPS: %d", score, level, jogador.lives, gi.quantidade, boss.ativo ? boss.vida : 0, fps_atual);
-        
-        characterGetPos(&jogador, &px, &py);
-        screenGotoxy(5, MAXY + 1);
-        screenSetColor(YELLOW, DARKGRAY);
-        printf("Pos: (%d,%d)  Tecla: %c (%d) ", px, py, (tecla > 31 && tecla < 127) ? tecla : '?', tecla);
-        screenUpdate();
 
+        screenGotoxy(3, 1);
+        screenSetColor(GREEN, DARKGRAY);
+        printf("Score: %d | Level: %d | Vidas: %d | Inimigos: %d | Boss: %d | FPS: %d", score, level, jogador.lives, gi.quantidade, boss.ativo ? boss.vida : 0, fps_atual);
+
+        characterGetPos(&jogador, &px, &py);
+        screenGotoxy(3, MAXY + 1);
+        screenSetColor(YELLOW, DARKGRAY);
+        printf("Pos: (%d,%d) | Tecla: %c (%d)", px, py, (tecla > 31 && tecla < 127) ? tecla : '?', tecla);
+        screenUpdate();
         }
     }
 
@@ -246,9 +249,9 @@ int main()
         screenGotoxy(MAXX / 2 - 5, MAXY / 2);
         screenSetColor(RED, DARKGRAY);
         printf("GAME OVER");
-        screenGotoxy(1, MAXY); 
+        screenGotoxy(1, MAXY);
         screenUpdate();
-        sleep(3); 
+        sleep(3);
     }
 
     characterDestroy(&jogador);
