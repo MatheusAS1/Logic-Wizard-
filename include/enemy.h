@@ -2,6 +2,7 @@
 #define __INIMIGO_H__
 
 #include <stdio.h>
+#include "logic.h"
 
 typedef struct {
     int x;
@@ -21,23 +22,34 @@ typedef struct {
     int x;
     int y;
     int vida;
+    int vida_maxima; 
     int ativo;
     int velocidade;
     int contador_frames;
+    int desafio_ativo;
+    Equivalencia equivalencia;
 } Boss;
 
 void gerenciadorInimigoIniciar(GerenciadorInimigo *gi, int max_inimigos);
 void gerenciadorInimigoDestruir(GerenciadorInimigo *gi);
 
-void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade);
+void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade, SistemaLogica *sl);
+
 void gerenciadorInimigoDesenhar(const GerenciadorInimigo *gi);
 void gerenciadorInimigoLimpar(const GerenciadorInimigo *gi);
 void gerenciadorInimigoAtualizar(GerenciadorInimigo *gi, int px, int py);
 void gerenciadorInimigoCompactar(GerenciadorInimigo *gi);
 
-void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade);
+void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogica *sl);
+
 void bossDesenhar(const Boss *boss);
 void bossLimpar(const Boss *boss);
 void bossAtualizar(Boss *boss, int px, int py);
 
-#endif
+void bossDesenharEquivalencia(const Boss *boss);
+void bossLimparEquivalencia(const Boss *boss);
+
+Inimigo* inimigoGetByIndex(GerenciadorInimigo *gi, int index);
+int inimigoEncontrarMaisProximo(const GerenciadorInimigo *gi, int px, int py);
+
+#endif /* __ENEMY_H__ */

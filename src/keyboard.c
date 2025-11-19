@@ -1,5 +1,5 @@
 /**
- * keyboard.h
+ * keyboard.c
  * Created on Aug, 23th 2023
  * Author: Tiago Barros
  * Based on "From C to C++ course - 2002"
@@ -11,11 +11,12 @@
 #include "keyboard.h"
 
 static struct termios initialSettings, newSettings;
-static int peekCharacter;
+static int peekCharacter = -1; 
 
 
 void keyboardInit()
 {
+    peekCharacter = -1;
     tcgetattr(0,&initialSettings);
     newSettings = initialSettings;
     newSettings.c_lflag &= ~ICANON;

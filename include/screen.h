@@ -10,8 +10,6 @@
 #define __SCREEN_H__
 
 #include <stdio.h>
-
-// Terminal control sequences
 #define ESC            "\033"
 #define NORMALTEXT     "[0m"
 #define BOLDTEXT       "[1m"
@@ -42,16 +40,15 @@
 #define BOX_BLOCK      0x61
 #define BOX_DOT        0x7E
 
-// screen constants
-#define SCRSTARTX      3      // Initial and final screen positions for the game
-#define SCRENDX        150   // It means the area that can be drawn 
+#define SCRSTARTX      3     
+#define SCRENDX        150  
 #define SCRSTARTY      1
 #define SCRENDY        40
 
-#define MINX           1      // min screen horizontal pos
-#define MINY           1      // min screen vertical pos
-#define MAXX           100 // max screen horizontal pos
-#define MAXY           30   // max screen vertical pos
+#define MINX           1  
+#define MINY           1   
+#define MAXX           100 
+#define MAXY           30   
 
 /**
  * Screen Colors type

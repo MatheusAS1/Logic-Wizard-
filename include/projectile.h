@@ -40,4 +40,4 @@ void gerenciadorProjetilAtualizar(GerenciadorProjetil *gp);
 
 void gerenciadorProjetilCompactar(GerenciadorProjetil *gp);
 
-#endif
+#endif /* __PROJECTILE_H__ */

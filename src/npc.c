@@ -69,11 +69,11 @@ void npcMostrarDialogoDiego(int x, int y) {
     screenGotoxy(x, y);
     printf("┌────────────────────────────────────────────────────────────┐");
     screenGotoxy(x, y + 1);
-    printf("│ Diego: Saude, jovem aprendiz!                             │");
+    printf("│ Diego: Saude, jovem aprendiz!                              │");
     screenGotoxy(x, y + 2);
-    printf("│        Use W, A, S, D para se mover pelo campo.           │");
+    printf("│        Use W, A, S, D para se mover pelo campo.            │");
     screenGotoxy(x, y + 3);
-    printf("│        Pressione V para lancar um feitico basico!         │");
+    printf("│        Pressione V para lancar um feitico basico!          │");
     screenGotoxy(x, y + 4);
     printf("└────────────────────────────────────────────────────────────┘");
     screenGotoxy(x, y + 5);
@@ -86,11 +86,11 @@ void npcMostrarDialogoGuilherme(int x, int y) {
     screenGotoxy(x, y);
     printf("┌────────────────────────────────────────────────────────────┐");
     screenGotoxy(x, y + 1);
-    printf("│ Guilherme: E nao se esqueca!                              │");
+    printf("│ Guilherme: E nao se esqueca!                               │");
     screenGotoxy(x, y + 2);
-    printf("│            Pressione F para ataque especial em 4 dir.!    │");
+    printf("│            Pressione F para ataque especial em 4 dir.!     │");
     screenGotoxy(x, y + 3);
-    printf("│            Derrote todos os inimigos e enfrente o Boss!   │");
+    printf("│            Derrote todos os inimigos e enfrente o Boss!    │");
     screenGotoxy(x, y + 4);
     printf("└────────────────────────────────────────────────────────────┘");
     screenGotoxy(x, y + 5);
@@ -111,7 +111,7 @@ void exibirTelaIntroducao() {
     screenClear();
     screenInit(1);
     keyboardInit();
-    timerInit(50);
+    timerInit(100);
     
     NPC diego, guilherme;
     Character jogador;

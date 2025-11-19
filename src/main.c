@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
@@ -8,13 +9,26 @@
 #include "projectile.h"
 #include "enemy.h"
 #include "npc.h"
+#include "logic.h"
+#include "item.h"
+#include "desafio_bau.h"
+#include "desafio_boss.h"
+#include "game_input.h"
+#include "collision.h"
+#include "game_progression.h"
+#include "game_render.h"
+#include "ui.h"
 
 int main()
 {
     Character jogador;
     GerenciadorProjetil gp;
     GerenciadorInimigo gi;
+    GerenciadorBau gb;
     Boss boss;
+    SistemaLogica sl;
+    EstadoDesafioBau desafio_bau;
+    EstadoDesafioBoss desafio_boss;
     int tecla = 0;
     
     int contador_frames = 0;
@@ -33,8 +47,16 @@ int main()
     screenInit(1);
     keyboardInit();
     timerInit(50);
+    
+    srand(time(NULL));
+    
+    logicaIniciar(&sl);
+    desafioBauIniciar(&desafio_bau);
+    desafioBossIniciar(&desafio_boss);
+    
     gerenciadorProjetilIniciar(&gp);
     gerenciadorInimigoIniciar(&gi, base_enemy_count * level);
+    gerenciadorBauIniciar(&gb, 10);
 
     characterInit(&jogador, 40, 12, "(-_-)/*");
     jogador.lives = 3;
@@ -44,221 +66,147 @@ int main()
     for (int i = 0; i < base_enemy_count * level; ++i) {
         int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
-        inimigoSpawn(&gi, x, y, base_enemy_life * level, velocidade_inicial - (level > 1 ? level-1 : 0));
+        inimigoSpawn(&gi, x, y, base_enemy_life * level, 
+                    velocidade_inicial - (level > 1 ? level-1 : 0), &sl);
     }
 
     while (tecla != 27 && jogador.lives > 0)
     {
         if (timerTimeOver()) {
-        int px, py;
+            int px, py;
 
-        characterClear(&jogador);
-        gerenciadorProjetilLimpar(&gp);
-        gerenciadorInimigoLimpar(&gi);
-        bossLimpar(&boss);
-
-        tecla = 0;
-        while (keyhit()) {
-            tecla = readch();
-        }
-
-        if (tecla) {
-            if (tecla == 'w') {
-                characterMove(&jogador, 0, -1);
-                characterSetDir(&jogador, 0, -1);
-            } else if (tecla == 's') {
-                characterMove(&jogador, 0, 1);
-                characterSetDir(&jogador, 0, 1);
-            } else if (tecla == 'a') {
-                characterMove(&jogador, -1, 0);
-                characterSetDir(&jogador, -1, 0);
-            } else if (tecla == 'd') {
-                characterMove(&jogador, 1, 0);
-                characterSetDir(&jogador, 1, 0);
+            characterClear(&jogador);
+            gerenciadorProjetilLimpar(&gp);
+            gerenciadorInimigoLimpar(&gi);
+            gerenciadorBauLimpar(&gb);
+            bossLimpar(&boss);
+            
+            if (boss_spawned && boss.ativo && boss.desafio_ativo) {
+                bossLimparEquivalencia(&boss);
             }
 
-            if (tecla == 'v') {
-                int px, py, dir_x, dir_y;
-                characterGetPos(&jogador, &px, &py);
-                characterGetDir(&jogador, &dir_x, &dir_y);
-                int spawn_x = px + (dir_x * 7);
-                int spawn_y = py + (dir_y * 2);
-                projetilCriar(&gp, spawn_x, spawn_y, dir_x, dir_y);
+            if (!desafioBauEstaAtivo(&desafio_bau) && !desafioBossEstaAtivo(&desafio_boss)) {
+                uiLimparAreaDesafio();
+                uiLimparAreaInput();
             }
 
-            if (tecla == 'F' || tecla == 'f') {
-                int px, py;
-                characterGetPos(&jogador, &px, &py);
+            tecla = 0;
 
-                if (py - 2 > MINY + 1)
-                    projetilCriarEspecial(&gp, px, py - 2, 0, -1);
-
-                if (py + 2 < MAXY - 1)
-                    projetilCriarEspecial(&gp, px, py + 2, 0, 1);
-
-                if (px - 2 > MINX + 1)
-                    projetilCriarEspecial(&gp, px - 2, py, -1, 0);
-
-                if (px + 9 < MAXX - 3)
-                    projetilCriarEspecial(&gp, px + 9, py, 1, 0);
+            if (desafioBauEstaAtivo(&desafio_bau)) {
+                desafioBauProcessarInput(&desafio_bau, &gb, &jogador, &score);
+                desafioBauDesenharInterface(&desafio_bau);
             }
-        }
 
-        gerenciadorProjetilAtualizar(&gp);
-
-        characterGetPos(&jogador, &px, &py);
-        gerenciadorInimigoAtualizar(&gi, px, py);
-
-        if (!boss_spawned && gi.quantidade == 0) {
-            boss_timer++;
-            if (boss_timer >= 100) {
-                bossIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, base_boss_life * (1 << (level-1)), velocidade_inicial - (level > 1 ? (level-1) * 2 : 0));
-                boss_spawned = 1;
+            else if (desafioBossEstaAtivo(&desafio_boss)) {
+                desafioBossProcessarInput(&desafio_boss, &boss, &jogador, &score);
+                desafioBossDesenharInterface(&desafio_boss);
             }
-        } else if (gi.quantidade > 0) {
-            boss_timer = 0;
-        }
 
-        if (boss_spawned && boss.ativo) {
-            bossAtualizar(&boss, px, py);
-        }
-
-        for (int i = 0; i < gi.quantidade; ++i) {
-            Inimigo *ini = &gi.inimigos[i];
-            if (!ini->ativo) continue;
-            if (px < ini->x + 5 && px + 8 > ini->x && py == ini->y) {
-                jogador.lives--;
-                ini->ativo = 0;
+            else {
+                processarInputJogador(&jogador, &gp);
             }
-        }
 
-        if (boss_spawned && boss.ativo) {
-            if (px < boss.x + 8 && px + 8 > boss.x && py == boss.y) {
-                jogador.lives = 0;
-            }
-        }
+            gerenciadorProjetilAtualizar(&gp);
+            characterGetPos(&jogador, &px, &py);
+            gerenciadorInimigoAtualizar(&gi, px, py);
 
-        for (int i = 0; i < gp.quantidade_simples; ++i) {
-            Projetil *p = &gp.projeteis[i];
-            if (!p->ativo) continue;
-
-            for (int j = 0; j < gi.quantidade; ++j) {
-                Inimigo *ini = &gi.inimigos[j];
-                if (!ini->ativo) continue;
-                if (p->y == ini->y && p->x >= ini->x && p->x < ini->x + 5) {
-                    ini->vida -= p->dano;
-                    p->ativo = 0;
-                    if (ini->vida <= 0) {
-                        ini->ativo = 0;
-                        score++;
-                    }
-                    break;
+            if (!desafioBauEstaAtivo(&desafio_bau) && !desafioBossEstaAtivo(&desafio_boss)) {
+                int bau_colidido = gerenciadorBauVerificarColisao(&gb, px, py);
+                if (bau_colidido != -1) {
+                    desafioBauAtivar(&desafio_bau, bau_colidido);
                 }
+            }
+
+            if (!boss_spawned && gi.quantidade == 0) {
+                boss_timer++;
+                if (boss_timer >= 100) {
+                    bossIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, 
+                               base_boss_life * (1 << (level-1)), 
+                               velocidade_inicial - (level > 1 ? (level-1) * 2 : 0), 
+                               &sl);
+                    boss_spawned = 1;
+                }
+            } else if (gi.quantidade > 0) {
+                boss_timer = 0;
             }
 
             if (boss_spawned && boss.ativo) {
-                if (p->y == boss.y && p->x >= boss.x && p->x < boss.x + 8) {
-                    boss.vida -= p->dano;
-                    p->ativo = 0;
-                    if (boss.vida <= 0) {
-                        boss.ativo = 0;
-                        score += 10; 
+                bossAtualizar(&boss, px, py);
+
+                if (!desafioBossEstaAtivo(&desafio_boss) && !boss.desafio_ativo) {
+                    if (boss.vida <= boss.vida_maxima / 2) {
+                        boss.desafio_ativo = 1;
+                        desafioBossAtivar(&desafio_boss);
+                        
+                        uiMostrarFeedback("*** DESAFIO LOGICO ATIVADO! ***", YELLOW, 1000, 
+                                         MAXX / 2 - 15, MAXY / 2 - 2);
                     }
                 }
             }
-        }
 
-        for (int i = 0; i < gp.quantidade_especial; ++i) {
-            Projetil *p = &gp.projeteis[MAX_PROJETIL_SIMPLES + i];
-            if (!p->ativo) continue;
-            for (int j = 0; j < gi.quantidade; ++j) {
-                Inimigo *ini = &gi.inimigos[j];
-                if (!ini->ativo) continue;
-                if (p->y == ini->y && p->x >= ini->x && p->x < ini->x + 5) {
-                    ini->vida -= p->dano;
-                    p->ativo = 0;
-                    if (ini->vida <= 0) {
-                        ini->ativo = 0;
-                        score++;
-                    }
-                    break;
-                }
-            }
-            if (boss_spawned && boss.ativo) {
-                if (p->y == boss.y && p->x >= boss.x && p->x < boss.x + 8) {
-                    boss.vida -= p->dano;
-                    p->ativo = 0;
-                    if (boss.vida <= 0) {
-                        boss.ativo = 0;
-                        score += 10;
-                    }
-                }
-            }
-        }
-        
-        if (boss_spawned && !boss.ativo) {
-            level++;
-            int new_enemy_count = base_enemy_count * level;
+            processarColisaoJogadorInimigos(&jogador, &gi, px, py);
+            processarColisaoJogadorBoss(&jogador, &boss, px, py, desafioBossEstaAtivo(&desafio_boss));
+            processarColisaoProjeteis(&gp, &gi, &boss, &gb, &score, boss_spawned, 
+                                     desafioBossEstaAtivo(&desafio_boss));
 
-            gerenciadorInimigoDestruir(&gi);
-            gerenciadorInimigoIniciar(&gi, new_enemy_count);
-
-            gerenciadorProjetilIniciar(&gp);
-
-            jogador.lives = 3;
-
-            for (int k = 0; k < new_enemy_count; ++k) {
-                int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
-                int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
-                inimigoSpawn(&gi, x, y, base_enemy_life * level, velocidade_inicial - (level > 1 ? level-1 : 0));
+            if (boss_spawned && !boss.ativo) {
+                int em_desafio_temp = 0;
+                avancarProximoLevel(&level, &gi, &gp, &jogador, &sl, &boss, 
+                                   &boss_spawned, &boss_timer, &em_desafio_temp,
+                                   base_enemy_count, base_enemy_life, velocidade_inicial);
             }
 
-            boss_spawned = 0;
-            boss_timer = 0;
-            boss.ativo = 0;
-        }
+            renderizarJogo(&jogador, &gp, &gi, &gb, &boss, boss_spawned, &sl);
 
-        characterDraw(&jogador);
-        gerenciadorProjetilDesenhar(&gp);
-        gerenciadorInimigoDesenhar(&gi);
-        if (boss_spawned && boss.ativo) bossDesenhar(&boss);
+            gerenciadorProjetilCompactar(&gp);
+            gerenciadorInimigoCompactar(&gi);
+            gerenciadorBauCompactar(&gb);
 
-        gerenciadorProjetilCompactar(&gp);
-        gerenciadorInimigoCompactar(&gi);
+            contador_frames++;
+            if (contador_frames >= 20) {
+                fps_atual = contador_frames;
+                contador_frames = 0;
+            }
 
-        contador_frames++;
-        if (contador_frames >= 20) {
-            fps_atual = contador_frames;
-            contador_frames = 0;
-        }
-
-        screenGotoxy(3, 1);
-        screenSetColor(GREEN, DARKGRAY);
-        printf("Score: %d | Level: %d | Vidas: %d | Inimigos: %d | Boss: %d | FPS: %d", score, level, jogador.lives, gi.quantidade, boss.ativo ? boss.vida : 0, fps_atual);
-
-        characterGetPos(&jogador, &px, &py);
-        screenGotoxy(3, MAXY + 1);
-        screenSetColor(YELLOW, DARKGRAY);
-        printf("Pos: (%d,%d) | Tecla: %c (%d)", px, py, (tecla > 31 && tecla < 127) ? tecla : '?', tecla);
-        screenUpdate();
+            uiDesenharHUDSuperior(score, level, jogador.lives, gi.quantidade, 
+                                 boss.ativo ? boss.vida : 0, gb.quantidade, fps_atual);
+            
+            characterGetPos(&jogador, &px, &py);
+            uiDesenharHUDInferior(px, py);
+            
+            screenUpdate();
         }
     }
 
     if (jogador.lives <= 0) {
         screenClear();
-        screenGotoxy(MAXX / 2 - 5, MAXY / 2);
+        screenGotoxy(MAXX / 2 - 10, MAXY / 2 - 2);
         screenSetColor(RED, DARKGRAY);
+        screenSetBold();
         printf("GAME OVER");
+        screenSetNormal();
+        
+        screenGotoxy(MAXX / 2 - 10, MAXY / 2);
+        screenSetColor(YELLOW, DARKGRAY);
+        printf("Score Final: %d", score);
+        
+        screenGotoxy(MAXX / 2 - 10, MAXY / 2 + 1);
+        screenSetColor(WHITE, DARKGRAY);
+        printf("Level Alcancado: %d", level);
+        
         screenGotoxy(1, MAXY);
         screenUpdate();
-        sleep(3);
+        sleep(5);
     }
 
     characterDestroy(&jogador);
     gerenciadorProjetilDestruir(&gp);
     gerenciadorInimigoDestruir(&gi);
+    gerenciadorBauDestruir(&gb);
+    logicaDestruir(&sl);
     keyboardDestroy();
     screenDestroy();
     timerDestroy();
+    
     return 0;
 }

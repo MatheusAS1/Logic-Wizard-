@@ -29,4 +29,4 @@ void characterGetPos(const Character *c, int *x, int *y);
 void characterSetDir(Character *c, int dx, int dy);
 void characterGetDir(const Character *c, int *dx, int *dy);
 
-#endif 
+#endif /* __CHARACTER_H__ */
