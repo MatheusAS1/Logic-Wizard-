@@ -26,7 +26,14 @@ int main()
     GerenciadorInimigo gi;
     GerenciadorBau gb;
     Boss boss;
-    SistemaLogica sl;
+    
+    SistemaLogica *sl = (SistemaLogica*)malloc(sizeof(SistemaLogica));
+    
+    if (sl == NULL) {
+        printf("ERRO FATAL: Sem memória para o sistema de lógica!\n");
+        return 1;
+    }
+
     EstadoDesafioBau desafio_bau;
     EstadoDesafioBoss desafio_boss;
     int tecla = 0;
@@ -41,8 +48,6 @@ int main()
     int boss_timer = 0;
     int score = 0;
     int velocidade_inicial = 10;
-
-    exibirTelaIntroducao();
     
     screenInit(1);
     keyboardInit();
@@ -50,7 +55,7 @@ int main()
     
     srand(time(NULL));
     
-    logicaIniciar(&sl);
+    logicaIniciar(sl);
     desafioBauIniciar(&desafio_bau);
     desafioBossIniciar(&desafio_boss);
     
@@ -67,7 +72,7 @@ int main()
         int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
         inimigoSpawn(&gi, x, y, base_enemy_life * level, 
-                    velocidade_inicial - (level > 1 ? level-1 : 0), &sl);
+                     velocidade_inicial - (level > 1 ? level-1 : 0));
     }
 
     while (tecla != 27 && jogador.lives > 0)
@@ -108,7 +113,11 @@ int main()
 
             gerenciadorProjetilAtualizar(&gp);
             characterGetPos(&jogador, &px, &py);
-            gerenciadorInimigoAtualizar(&gi, px, py);
+            if(!desafioBauEstaAtivo(&desafio_bau) && !desafioBossEstaAtivo(&desafio_boss)){
+                gerenciadorInimigoAtualizar(&gi, px, py);
+                bossAtualizar(&boss, px, py);
+            }
+            
 
             if (!desafioBauEstaAtivo(&desafio_bau) && !desafioBossEstaAtivo(&desafio_boss)) {
                 int bau_colidido = gerenciadorBauVerificarColisao(&gb, px, py);
@@ -123,7 +132,7 @@ int main()
                     bossIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, 
                                base_boss_life * (1 << (level-1)), 
                                velocidade_inicial - (level > 1 ? (level-1) * 2 : 0), 
-                               &sl);
+                               sl); 
                     boss_spawned = 1;
                 }
             } else if (gi.quantidade > 0) {
@@ -131,9 +140,8 @@ int main()
             }
 
             if (boss_spawned && boss.ativo) {
-                bossAtualizar(&boss, px, py);
-
                 if (!desafioBossEstaAtivo(&desafio_boss) && !boss.desafio_ativo) {
+                    
                     if (boss.vida <= boss.vida_maxima / 2) {
                         boss.desafio_ativo = 1;
                         desafioBossAtivar(&desafio_boss);
@@ -151,12 +159,11 @@ int main()
 
             if (boss_spawned && !boss.ativo) {
                 int em_desafio_temp = 0;
-                avancarProximoLevel(&level, &gi, &gp, &jogador, &sl, &boss, 
+                avancarProximoLevel(&level, &gi, &gp, &jogador, sl, &boss, &gb,
                                    &boss_spawned, &boss_timer, &em_desafio_temp,
                                    base_enemy_count, base_enemy_life, velocidade_inicial);
             }
-
-            renderizarJogo(&jogador, &gp, &gi, &gb, &boss, boss_spawned, &sl);
+            renderizarJogo(&jogador, &gp, &gi, &gb, &boss, boss_spawned, sl);
 
             gerenciadorProjetilCompactar(&gp);
             gerenciadorInimigoCompactar(&gi);
@@ -203,7 +210,11 @@ int main()
     gerenciadorProjetilDestruir(&gp);
     gerenciadorInimigoDestruir(&gi);
     gerenciadorBauDestruir(&gb);
-    logicaDestruir(&sl);
+    
+    logicaDestruir(sl);
+    free(sl); 
+    sl = NULL;
+
     keyboardDestroy();
     screenDestroy();
     timerDestroy();

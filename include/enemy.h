@@ -33,7 +33,7 @@ typedef struct {
 void gerenciadorInimigoIniciar(GerenciadorInimigo *gi, int max_inimigos);
 void gerenciadorInimigoDestruir(GerenciadorInimigo *gi);
 
-void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade, SistemaLogica *sl);
+void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade);
 
 void gerenciadorInimigoDesenhar(const GerenciadorInimigo *gi);
 void gerenciadorInimigoLimpar(const GerenciadorInimigo *gi);

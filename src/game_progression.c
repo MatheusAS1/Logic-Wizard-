@@ -1,13 +1,16 @@
 #include "game_progression.h"
 #include "screen.h"
+#include "item.h"
 #include <stdlib.h>
 
 void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil *gp,
                          Character *jogador, SistemaLogica *sl, Boss *boss, 
-                         int *boss_spawned, int *boss_timer, int *em_desafio,
+                         GerenciadorBau *gb, int *boss_spawned, int *boss_timer, int *em_desafio,
                          int base_enemy_count, int base_enemy_life, int velocidade_inicial) {
-    if (!level || !gi || !gp || !jogador || !sl || !boss) return;
+    if (!level || !gi || !gp || !jogador || !sl || !boss || !gb) return;
     
+    gb->quantidade = 0;
+
     (*level)++;
     int new_enemy_count = base_enemy_count * (*level);
 
@@ -21,7 +24,7 @@ void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil
         int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
         inimigoSpawn(gi, x, y, base_enemy_life * (*level), 
-                    velocidade_inicial - ((*level) > 1 ? (*level)-1 : 0), sl);
+                    velocidade_inicial - ((*level) > 1 ? (*level)-1 : 0));
     }
 
     *boss_spawned = 0;

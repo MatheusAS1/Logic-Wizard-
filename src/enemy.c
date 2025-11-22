@@ -13,7 +13,6 @@ typedef struct {
     int ativo;
     int contador_frames; 
     int velocidade;
-    Equivalencia equivalencia;  
 } InimigoInterno;
 
 void gerenciadorInimigoIniciar(GerenciadorInimigo *gi, int max_inimigos) {
@@ -35,8 +34,9 @@ void gerenciadorInimigoDestruir(GerenciadorInimigo *gi) {
     gi->max_inimigos = 0;
 }
 
-void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade, SistemaLogica *sl) {
+void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade) {
     if (!gi || gi->quantidade >= gi->max_inimigos) return;
+    
     InimigoInterno *ini = &((InimigoInterno*)gi->inimigos)[gi->quantidade];
     ini->x = x;
     ini->y = y;
@@ -44,10 +44,6 @@ void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade
     ini->ativo = 1;
     ini->contador_frames = 0;
     ini->velocidade = velocidade;
-    
-    if (sl) {
-        ini->equivalencia = logicaGetEquivalenciaAleatoria(sl);
-    }
     
     gi->quantidade++;
 }
@@ -58,7 +54,7 @@ void gerenciadorInimigoDesenhar(const GerenciadorInimigo *gi) {
         const InimigoInterno *ini = &((InimigoInterno*)gi->inimigos)[i];
         if (ini->ativo) {
             screenGotoxy(ini->x, ini->y);
-            screenSetColor(ini->equivalencia.cor, DARKGRAY);
+            screenSetColor(MAGENTA, DARKGRAY);
             printf("|*~*|");
         }
     }

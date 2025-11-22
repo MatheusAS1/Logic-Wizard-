@@ -14,12 +14,61 @@ void logicaIniciar(SistemaLogica *sl) {
     sl->equivalencias[EQUIV_COMUTATIVA_OR].tipo = EQUIV_COMUTATIVA_OR;
     sl->equivalencias[EQUIV_COMUTATIVA_OR].cor = GREEN;
     strcpy(sl->equivalencias[EQUIV_COMUTATIVA_OR].nome, "Comut. OR");
+
     strcpy(sl->equivalencias[EQUIV_COMUTATIVA_BICON].forma_normal, "P<->Q");
     strcpy(sl->equivalencias[EQUIV_COMUTATIVA_BICON].forma_equivalente, "Q<->P");
     sl->equivalencias[EQUIV_COMUTATIVA_BICON].tipo = EQUIV_COMUTATIVA_BICON;
     sl->equivalencias[EQUIV_COMUTATIVA_BICON].cor = BLUE;
     strcpy(sl->equivalencias[EQUIV_COMUTATIVA_BICON].nome, "Comut. <->");
-    
+
+    strcpy(sl->equivalencias[EQUIV_IMPLICACAO].forma_normal, "P->Q");
+    strcpy(sl->equivalencias[EQUIV_IMPLICACAO].forma_equivalente, "~PvQ");
+    sl->equivalencias[EQUIV_IMPLICACAO].tipo = EQUIV_IMPLICACAO;
+    sl->equivalencias[EQUIV_IMPLICACAO].cor = RED;
+    strcpy(sl->equivalencias[EQUIV_IMPLICACAO].nome, "Def. Implic.");
+
+    strcpy(sl->equivalencias[EQUIV_CONTRAPOSITIVA].forma_normal, "P->Q");
+    strcpy(sl->equivalencias[EQUIV_CONTRAPOSITIVA].forma_equivalente, "~Q->~P");
+    sl->equivalencias[EQUIV_CONTRAPOSITIVA].tipo = EQUIV_CONTRAPOSITIVA;
+    sl->equivalencias[EQUIV_CONTRAPOSITIVA].cor = MAGENTA;
+    strcpy(sl->equivalencias[EQUIV_CONTRAPOSITIVA].nome, "Contrapositiva");
+
+    strcpy(sl->equivalencias[EQUIV_IDEMPOTENTE].forma_normal, "P");
+    strcpy(sl->equivalencias[EQUIV_IDEMPOTENTE].forma_equivalente, "P^P");
+    sl->equivalencias[EQUIV_IDEMPOTENTE].tipo = EQUIV_IDEMPOTENTE;
+    sl->equivalencias[EQUIV_IDEMPOTENTE].cor = YELLOW;
+    strcpy(sl->equivalencias[EQUIV_IDEMPOTENTE].nome, "Idempotente");
+
+    strcpy(sl->equivalencias[EQUIV_ABSORCAO].forma_normal, "P");
+    strcpy(sl->equivalencias[EQUIV_ABSORCAO].forma_equivalente, "P^(PvQ)");
+    sl->equivalencias[EQUIV_ABSORCAO].tipo = EQUIV_ABSORCAO;
+    sl->equivalencias[EQUIV_ABSORCAO].cor = CYAN;
+    strcpy(sl->equivalencias[EQUIV_ABSORCAO].nome, "Absorcao");
+
+    strcpy(sl->equivalencias[EQUIV_DISTRIBUTIVA].forma_normal, "P^(QvS)");
+    strcpy(sl->equivalencias[EQUIV_DISTRIBUTIVA].forma_equivalente, "(P^Q)v(P^S)");
+    sl->equivalencias[EQUIV_DISTRIBUTIVA].tipo = EQUIV_DISTRIBUTIVA;
+    sl->equivalencias[EQUIV_DISTRIBUTIVA].cor = LIGHTGRAY;
+    strcpy(sl->equivalencias[EQUIV_DISTRIBUTIVA].nome, "Distributiva");
+
+    strcpy(sl->equivalencias[EQUIV_DEFINICAO_BICON].forma_normal, "P<->Q");
+    strcpy(sl->equivalencias[EQUIV_DEFINICAO_BICON].forma_equivalente, "(P->Q)^(Q->P)");
+    sl->equivalencias[EQUIV_DEFINICAO_BICON].tipo = EQUIV_DEFINICAO_BICON;
+    sl->equivalencias[EQUIV_DEFINICAO_BICON].cor = BROWN;
+    strcpy(sl->equivalencias[EQUIV_DEFINICAO_BICON].nome, "Def. Bicon.");
+
+    strcpy(sl->equivalencias[EQUIV_COMUTATIVA_AND].forma_normal, "P^Q");
+    strcpy(sl->equivalencias[EQUIV_COMUTATIVA_AND].forma_equivalente, "Q^P");
+    sl->equivalencias[EQUIV_COMUTATIVA_AND].tipo = EQUIV_COMUTATIVA_AND;
+    sl->equivalencias[EQUIV_COMUTATIVA_AND].cor = GREEN;
+    strcpy(sl->equivalencias[EQUIV_COMUTATIVA_AND].nome, "Comut. AND");
+
+    strcpy(sl->equivalencias[EQUIV_ASSOCIATIVA].forma_normal, "P^(Q^S)");
+    strcpy(sl->equivalencias[EQUIV_ASSOCIATIVA].forma_equivalente, "(P^Q)^S");
+    sl->equivalencias[EQUIV_ASSOCIATIVA].tipo = EQUIV_ASSOCIATIVA;
+    sl->equivalencias[EQUIV_ASSOCIATIVA].cor = BLUE;
+    strcpy(sl->equivalencias[EQUIV_ASSOCIATIVA].nome, "Associativa");
+
     srand(time(NULL));
 }
 
@@ -112,6 +161,9 @@ void logicaNormalizarString(char *str) {
     str[j] = '\0';
 }
 
+
+
+
 int logicaCompararExpressoes(const char *expr1, const char *expr2) {
     if (!expr1 || !expr2) return 0;
     
@@ -162,6 +214,8 @@ int logicaValidarCaracteresRecursivo(const char *str, int index) {
     char c = toupper(str[index]);
     int valido = (c == 'P' || c == 'Q' || c == 'V' || 
                   c == '<' || c == '-' || c == '>' || 
+                  c == '^' || c == '~' || c == '(' || c == ')' ||
+                  c == 'S' || 
                   c == ' ' || c == '\t' || c == '\n');
     
     if (!valido) {
