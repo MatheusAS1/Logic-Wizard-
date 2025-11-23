@@ -2,6 +2,8 @@
     "files.associations": {
         "*.java": "java",
         "time.h": "c",
-        "timer.h": "c"
+        "timer.h": "c",
+        "menu.h": "c",
+        "game_progression.h": "c"
     }
 }
