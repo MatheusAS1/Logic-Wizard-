@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include "storage.h"
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
@@ -48,7 +49,7 @@ int main()
     int boss_timer = 0;
     int score = 0;
     int velocidade_inicial = 10;
-    
+    int recorde_atual = storageCarregarRecorde();
     exibirTelaIntroducao();
 
     screenInit(1);
@@ -176,12 +177,16 @@ int main()
                 fps_atual = contador_frames;
                 contador_frames = 0;
             }
-
+            if (score > recorde_atual) {
+                recorde_atual = score;
+            }
             uiDesenharHUDSuperior(score, level, jogador.lives, gi.quantidade, 
-                                 boss.ativo ? boss.vida : 0, gb.quantidade, fps_atual);
+                                 boss.ativo ? boss.vida : 0, gb.quantidade, fps_atual,recorde_atual);
             
             characterGetPos(&jogador, &px, &py);
             uiDesenharHUDInferior(px, py);
+            
+
             
             screenUpdate();
         }
@@ -207,7 +212,7 @@ int main()
         screenUpdate();
         sleep(5);
     }
-
+    storageSalvarRecorde(recorde_atual);
     characterDestroy(&jogador);
     gerenciadorProjetilDestruir(&gp);
     gerenciadorInimigoDestruir(&gi);
