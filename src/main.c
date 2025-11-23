@@ -49,6 +49,8 @@ int main()
     int score = 0;
     int velocidade_inicial = 10;
     
+    exibirTelaIntroducao();
+
     screenInit(1);
     keyboardInit();
     timerInit(50);

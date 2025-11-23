@@ -23,8 +23,11 @@ void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil
     for (int k = 0; k < new_enemy_count; ++k) {
         int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
-        inimigoSpawn(gi, x, y, base_enemy_life * (*level), 
-                    velocidade_inicial - ((*level) > 1 ? (*level)-1 : 0));
+        int delay_inimigo = velocidade_inicial - ((*level) / 4);
+
+        if (delay_inimigo < 5) delay_inimigo = 5;
+
+        inimigoSpawn(gi, x, y, base_enemy_life * (*level), delay_inimigo);
     }
 
     *boss_spawned = 0;

@@ -8,7 +8,8 @@ typedef struct {
     int x;
     int y;
     int vida;
-    int ativo; 
+    int ativo;
+    int contador_frames;
     int velocidade;
 } Inimigo;
 
