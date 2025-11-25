@@ -28,7 +28,7 @@ void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
     p->ativo = 1;
     p->aparencia = "*";
     p->contador_frames = 0;
-    p->velocidade = VELOCIDADE_PROJETIL;
+    p->velocidade = VELOCIDADE_PROJETIL+100;
     p->dano = 1;
 
     gp->quantidade_simples++;
@@ -45,10 +45,10 @@ void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy
     p->dx = dx;
     p->dy = dy;
     p->ativo = 1;
-    p->aparencia = "o";
+    p->aparencia = "@";
     p->contador_frames = 0;
     p->velocidade = VELOCIDADE_PROJETIL * 3; 
-    p->dano = 3;
+    p->dano = 4;
 
     gp->quantidade_especial++;
 }

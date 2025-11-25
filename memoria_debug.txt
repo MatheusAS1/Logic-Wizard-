@@ -1,0 +1,9 @@
+=== MAPA DE MEMÓRIA ===
+Endereco JOGADOR: 0x7ffe7a3218b0
+Endereco BOSS:    0x7ffe7a321950
+Endereco SL:      0x7ffe7a321d90 (Tamanho: 1684 bytes)
+Endereco GI:      0x7ffe7a321890
+Distancia SL -> Jogador: 1248 bytes
+
+=== INICIO LOOP ===
+Vidas iniciais: 3

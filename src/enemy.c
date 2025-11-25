@@ -1,26 +1,19 @@
 #include "enemy.h"
+#include "logic.h"
 #include "screen.h"
 #include <stdlib.h>
+#include <string.h>
 
 #define INIMIGO_VELOCIDADE 4000
 
-typedef struct {
-    int x;
-    int y;
-    int vida;
-    int ativo;
-    int contador_frames; 
-    int velocidade;
-} InimigoInterno;
-
 void gerenciadorInimigoIniciar(GerenciadorInimigo *gi, int max_inimigos) {
     if (!gi) return;
-    gi->inimigos = (Inimigo*)malloc(sizeof(InimigoInterno) * max_inimigos);
+    gi->inimigos = (Inimigo*)malloc(sizeof(Inimigo) * max_inimigos);
     gi->quantidade = 0;
     gi->max_inimigos = max_inimigos;
     for (int i = 0; i < max_inimigos; ++i) {
-        ((InimigoInterno*)gi->inimigos)[i].ativo = 0;
-        ((InimigoInterno*)gi->inimigos)[i].contador_frames = 0;
+        gi->inimigos[i].ativo = 0;
+        gi->inimigos[i].contador_frames = 0;
     }
 }
 
@@ -32,25 +25,27 @@ void gerenciadorInimigoDestruir(GerenciadorInimigo *gi) {
     gi->max_inimigos = 0;
 }
 
-void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida,int velocidade) {
+void inimigoSpawn(GerenciadorInimigo *gi, int x, int y, int vida, int velocidade) {
     if (!gi || gi->quantidade >= gi->max_inimigos) return;
-    InimigoInterno *ini = &((InimigoInterno*)gi->inimigos)[gi->quantidade];
+    
+    Inimigo *ini = &gi->inimigos[gi->quantidade];
     ini->x = x;
     ini->y = y;
     ini->vida = vida;
     ini->ativo = 1;
     ini->contador_frames = 0;
     ini->velocidade = velocidade;
+    
     gi->quantidade++;
 }
 
 void gerenciadorInimigoDesenhar(const GerenciadorInimigo *gi) {
     if (!gi) return;
     for (int i = 0; i < gi->quantidade; ++i) {
-        const InimigoInterno *ini = &((InimigoInterno*)gi->inimigos)[i];
+        const Inimigo *ini = &gi->inimigos[i];
         if (ini->ativo) {
             screenGotoxy(ini->x, ini->y);
-            screenSetColor(YELLOW, DARKGRAY);
+            screenSetColor(MAGENTA, DARKGRAY);
             printf("|*~*|");
         }
     }
@@ -59,12 +54,13 @@ void gerenciadorInimigoDesenhar(const GerenciadorInimigo *gi) {
 void gerenciadorInimigoLimpar(const GerenciadorInimigo *gi) {
     if (!gi) return;
     for (int i = 0; i < gi->quantidade; ++i) {
-        const InimigoInterno *ini = &((InimigoInterno*)gi->inimigos)[i];
+        const Inimigo *ini = &gi->inimigos[i];
         if (ini->ativo) {
-            // Só limpa se não estiver na borda
             if (ini->x > MINX && ini->x + 4 < MAXX && ini->y > MINY && ini->y < MAXY) {
                 screenGotoxy(ini->x, ini->y);
                 printf("     ");
+                screenGotoxy(ini->x - 1, ini->y - 1);
+                printf("          ");
             }
         }
     }
@@ -73,7 +69,7 @@ void gerenciadorInimigoLimpar(const GerenciadorInimigo *gi) {
 void gerenciadorInimigoAtualizar(GerenciadorInimigo *gi, int px, int py) {
     if (!gi) return;
     for (int i = 0; i < gi->quantidade; ++i) {
-        InimigoInterno *ini = &((InimigoInterno*)gi->inimigos)[i];
+        Inimigo *ini = &gi->inimigos[i];
         if (!ini->ativo) continue;
         ini->contador_frames++;
         if (ini->contador_frames >= ini->velocidade) {
@@ -90,10 +86,9 @@ void gerenciadorInimigoCompactar(GerenciadorInimigo *gi) {
     if (!gi) return;
     int write_idx = 0;
     for (int i = 0; i < gi->quantidade; ++i) {
-        InimigoInterno *inimigos = (InimigoInterno*)gi->inimigos;
-        if (inimigos[i].ativo) { 
+        if (gi->inimigos[i].ativo) { 
             if (i != write_idx) {
-                inimigos[write_idx] = inimigos[i]; 
+                gi->inimigos[write_idx] = gi->inimigos[i]; 
             }
             write_idx++; 
         }
@@ -101,14 +96,49 @@ void gerenciadorInimigoCompactar(GerenciadorInimigo *gi) {
     gi->quantidade = write_idx; 
 }
 
-void bossIniciar(Boss *boss, int x, int y, int vida,int velocidade) {
+Inimigo* inimigoGetByIndex(GerenciadorInimigo *gi, int index) {
+    if (!gi || index < 0 || index >= gi->quantidade) return NULL;
+    return &gi->inimigos[index];
+}
+
+int inimigoEncontrarMaisProximo(const GerenciadorInimigo *gi, int px, int py) {
+    if (!gi) return -1;
+    
+    int menor_dist = 9999;
+    int index_mais_proximo = -1;
+    
+    for (int i = 0; i < gi->quantidade; ++i) {
+        const Inimigo *ini = &gi->inimigos[i];
+        if (!ini->ativo) continue;
+        
+        int dist_x = abs(ini->x - px);
+        int dist_y = abs(ini->y - py);
+        int dist = dist_x + dist_y;
+        
+        if (dist < menor_dist) {
+            menor_dist = dist;
+            index_mais_proximo = i;
+        }
+    }
+    
+    return index_mais_proximo;
+}
+
+
+void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogica *sl) {
     if (!boss) return;
     boss->x = x;
     boss->y = y;
     boss->vida = vida;
+    boss->vida_maxima = vida;
     boss->ativo = 1;
     boss->velocidade = velocidade;
     boss->contador_frames = 0;
+    boss->desafio_ativo = 0;
+    
+    if (sl) {
+        boss->equivalencia = logicaGetEquivalenciaAleatoria(sl);
+    }
 }
 
 void bossDesenhar(const Boss *boss) {
@@ -134,4 +164,21 @@ void bossAtualizar(Boss *boss, int px, int py) {
         else if (boss->y > py) boss->y--;
         boss->contador_frames = 0;
     }
+}
+
+void bossDesenharEquivalencia(const Boss *boss) {
+    if (!boss || !boss->ativo || !boss->desafio_ativo) return;
+    
+    screenGotoxy(boss->x - 2, boss->y - 1);
+    screenSetColor(boss->equivalencia.cor, DARKGRAY);
+    screenSetBold();
+    printf("[%s]", boss->equivalencia.forma_equivalente);
+    screenSetNormal();
+}
+
+void bossLimparEquivalencia(const Boss *boss) {
+    if (!boss) return;
+    
+    screenGotoxy(boss->x - 2, boss->y - 1);
+    printf("                    ");
 }

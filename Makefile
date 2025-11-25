@@ -20,6 +20,9 @@ OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 HEADER_FILES = $(wildcard $(INCLUDE_DIR)/*.h)
 TARGET = $(BUILD_DIR)/$(PROJ_NAME)
 
+# Evita conflitos com arquivos de mesmo nome das regras
+.PHONY: all clean run rebuild
+
 # ======================================================
 #  Regras principais
 # ======================================================
@@ -33,6 +36,7 @@ $(TARGET): $(OBJ_FILES)
 	@echo "✅ Build completo! Executável gerado em $(TARGET)"
 
 # Compilar cada arquivo .c individualmente
+# Nota: Adicionamos $(HEADER_FILES) aqui para garantir que se um .h mudar, tudo recompila
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER_FILES)
 	@echo "🧩 Compilando $<..."
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -54,6 +58,11 @@ clean:
 	@rm -rf $(BUILD_DIR)
 	@echo "✨ Limpeza concluída."
 
+# --- NOVO COMANDO ---
+# Limpa tudo e compila do zero (USE ESTE PARA CORRIGIR SEU BUG)
+rebuild: clean all
+	@echo "🔄 Rebuild completo realizado com sucesso!"
+
 # Compila e executa
 run: all
 	@echo "🚀 Executando o jogo..."
@@ -63,7 +72,8 @@ run: all
 #  Informações
 # ======================================================
 # Comandos disponíveis:
-#   make        -> Compila o projeto
-#   make run    -> Compila e executa
-#   make clean  -> Remove arquivos de build
+#   make          -> Compila o projeto (incremental)
+#   make run      -> Compila e executa
+#   make clean    -> Remove arquivos de build
+#   make rebuild  -> Limpa tudo e recompila (Resolve bugs de memória)
 # ======================================================
