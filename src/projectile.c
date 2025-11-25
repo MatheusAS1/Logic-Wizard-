@@ -1,6 +1,9 @@
 #include "projectile.h"
 #include "screen.h"
+#include "audio.h"
 #include <string.h>
+
+static int soundShootId = -1;
 
 void gerenciadorProjetilIniciar(GerenciadorProjetil *gp)
 {
@@ -8,6 +11,11 @@ void gerenciadorProjetilIniciar(GerenciadorProjetil *gp)
     gp->quantidade_simples = 0;
     gp->quantidade_especial = 0;
     memset(gp->projeteis, 0, sizeof(gp->projeteis));
+    
+    soundShootId = audioLoadSound("assets/sounds/shoot.wav");
+    if (soundShootId < 0) {
+        printf("[PROJECTILE] Aviso: Som de tiro não carregado (jogo continua sem som)\n");
+    }
 }
 
 void gerenciadorProjetilDestruir(GerenciadorProjetil *gp)
@@ -32,6 +40,10 @@ void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
     p->dano = 1;
 
     gp->quantidade_simples++;
+    
+    if (soundShootId >= 0) {
+        audioPlaySound(soundShootId, 30);
+    }
 }
 
 void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
@@ -47,7 +59,11 @@ void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy
     p->ativo = 1;
     p->aparencia = "@";
     p->contador_frames = 0;
-    p->velocidade = VELOCIDADE_PROJETIL * 3; 
+    p->velocidade = VELOCIDADE_PROJETIL * 3;
+    
+    if (soundShootId >= 0) {
+        audioPlaySound(soundShootId, 35);
+    } 
     p->dano = 4;
 
     gp->quantidade_especial++;

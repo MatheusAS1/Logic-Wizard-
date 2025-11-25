@@ -11,13 +11,20 @@
 #include "npc.h"
 #include "menu.h" 
 #include "creditos.h"
-
-
-
-
+#include "audio.h"
 
 int main()
 {
+    if (audioInit() != 0) {
+        fprintf(stderr, "Aviso: Sistema de áudio não disponível. O jogo continuará sem música.\n");
+    } else {
+        audioSetMusicVolume(20);
+        
+        if (audioPlayMusic("assets/music/menu_music.ogg", -1) != 0) {
+            printf("[MAIN] OGG não encontrado, tentando MP3...\n");
+            audioPlayMusic("assets/music/menu_music.mp3", -1);
+        }
+    }
 
     int opcao = 0; 
     
@@ -38,6 +45,8 @@ int main()
                 break;
         }
     }
+    
+    audioQuit();
     
     screenClear();
     printf("Obrigado por jogar Logic Wizard!\n");

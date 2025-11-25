@@ -5,7 +5,8 @@
 
 # 🔧 Compilador e flags
 CC = gcc
-CFLAGS = -Wall -Werror -g -I$(INCLUDE_DIR)
+CFLAGS = -Wall -Werror -g -I$(INCLUDE_DIR) $(shell sdl2-config --cflags)
+LDFLAGS = $(shell sdl2-config --libs) -lSDL2_mixer
 
 # 🧱 Estrutura de pastas
 SRC_DIR     = src
@@ -32,7 +33,7 @@ all: $(BUILD_DIR) $(OBJ_DIR) $(TARGET)
 
 $(TARGET): $(OBJ_FILES)
 	@echo "🔗 Linking $(PROJ_NAME)..."
-	@$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES)
+	@$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) $(LDFLAGS)
 	@echo "✅ Build completo! Executável gerado em $(TARGET)"
 
 # Compilar cada arquivo .c individualmente

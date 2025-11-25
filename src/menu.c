@@ -2,6 +2,7 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
+#include "audio.h"
 #include <stdio.h>
 #include <string.h>
 
