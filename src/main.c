@@ -8,6 +8,7 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "history_mode.h"
+#include "arcade_mode.h"
 #include "npc.h"
 #include "menu.h" 
 #include "creditos.h"
@@ -28,7 +29,7 @@ int main()
 
     int opcao = 0; 
     
-    while (opcao != 4) {
+    while (opcao != 5) {
         opcao = exibirMenuPrincipal(); 
         
         switch(opcao) {
@@ -36,12 +37,15 @@ int main()
                 iniciarModoHistoria(); 
                 break;
             case 2:
-                exibirTelaIntroducao();
+                iniciarModoArcade();
                 break;
             case 3:
-                exibirCreditos();
+                exibirTelaIntroducao();
                 break;
             case 4:
+                exibirCreditos();
+                break;
+            case 5:
                 break;
         }
     }
