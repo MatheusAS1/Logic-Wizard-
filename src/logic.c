@@ -79,10 +79,10 @@ void logicaDestruir(SistemaLogica *sl) {
 void logicaDesenharTabela(const SistemaLogica *sl) {
     if (!sl) return;
 
-    int start_x = MAXX + 10;
+    int start_x = MAXX + 200;
     int start_y = 3;
     
-    screenGotoxy(start_x, start_y);
+    screenGotoxy(start_x+30, start_y);
     screenSetColor(YELLOW, DARKGRAY);
     screenSetBold();
     printf("=== GUIA DE EQUIVALENCIAS ===");
@@ -114,18 +114,22 @@ void logicaDesenharTabela(const SistemaLogica *sl) {
         screenSetColor(LIGHTGREEN, DARKGRAY);
         printf("%s", sl->equivalencias[i].forma_normal);
     }
-    
-    start_y += sl->total_equivalencias + 2;
-    screenGotoxy(start_x, start_y);
-    screenSetColor(YELLOW, DARKGRAY);
-    printf("Simbolos:");
-    start_y++;
-    screenGotoxy(start_x, start_y);
+}
+
+void logicaApagarTabela(const SistemaLogica *sl) {
+    if (!sl) return;
+
+    int start_x = MAXX + 10;
+    int start_y = 3;
+    int total_linhas = 4 + sl->total_equivalencias + 2 + 3;
+    char borracha[] = "                                                            ";
+
     screenSetColor(WHITE, DARKGRAY);
-    printf("  v   = OU");
-    start_y++;
-    screenGotoxy(start_x, start_y);
-    printf("  <-> = BICONDICIONAL");
+
+    for (int i = 0; i < total_linhas; i++) {
+        screenGotoxy(start_x, start_y + i);
+        printf("%s", borracha);
+    }
 }
 
 Equivalencia logicaGetEquivalenciaAleatoria(const SistemaLogica *sl) {

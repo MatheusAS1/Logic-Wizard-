@@ -74,7 +74,7 @@ int exibirMenuPrincipal() {
                 rodando = 0; 
             }
 
-            desenharOpcao(menuX, menuY,     "JOGAR    ", (opcaoSelecionada == OP_JOGAR));
+            desenharOpcao(menuX, menuY,     "MODO HISTÓRIA", (opcaoSelecionada == OP_JOGAR));
             desenharOpcao(menuX, menuY + 2, "TUTORIAL ", (opcaoSelecionada == OP_TUTORIAL));
             desenharOpcao(menuX, menuY + 4, "CREDITOS ", (opcaoSelecionada == OP_CREDITOS));
             desenharOpcao(menuX, menuY + 6, "SAIR     ", (opcaoSelecionada == OP_SAIR));

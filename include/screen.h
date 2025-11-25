@@ -41,13 +41,13 @@
 #define BOX_DOT        0x7E
 
 #define SCRSTARTX      3     
-#define SCRENDX        150  
+#define SCRENDX        150
 #define SCRSTARTY      1
 #define SCRENDY        40
 
 #define MINX           1  
 #define MINY           1   
-#define MAXX           100 
+#define MAXX           100
 #define MAXY           30   
 
 /**

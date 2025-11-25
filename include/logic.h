@@ -33,6 +33,7 @@ typedef struct {
 void logicaIniciar(SistemaLogica *sl);
 void logicaDestruir(SistemaLogica *sl);
 void logicaDesenharTabela(const SistemaLogica *sl);
+void logicaApagarTabela(const SistemaLogica *sl);
 Equivalencia logicaGetEquivalenciaAleatoria(const SistemaLogica *sl);
 screenColor logicaGetCor(TipoEquivalencia tipo);
 int logicaValidarResposta(const Equivalencia *equiv, const char *resposta_jogador);

@@ -12,7 +12,7 @@ void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil
     gb->quantidade = 0;
 
     (*level)++;
-    int new_enemy_count = base_enemy_count * (*level);
+    int new_enemy_count = (base_enemy_count * (*level-1)*0.5)+1;
 
     gerenciadorInimigoDestruir(gi);
     gerenciadorInimigoIniciar(gi, new_enemy_count);
@@ -25,8 +25,7 @@ void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
         int delay_inimigo = velocidade_inicial - ((*level) / 4);
 
-        if (delay_inimigo < 5) delay_inimigo = 5;
-
+        if (delay_inimigo < 4) delay_inimigo = 100;
         inimigoSpawn(gi, x, y, base_enemy_life * (*level), delay_inimigo);
     }
 

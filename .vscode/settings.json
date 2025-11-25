@@ -4,6 +4,8 @@
         "time.h": "c",
         "timer.h": "c",
         "menu.h": "c",
-        "game_progression.h": "c"
+        "game_progression.h": "c",
+        "string.h": "c",
+        "boss_final.h": "c"
     }
 }

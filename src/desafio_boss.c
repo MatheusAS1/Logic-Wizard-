@@ -46,6 +46,25 @@ int desafioBossProcessarInput(EstadoDesafioBoss *estado, Boss *boss,
                 
                 uiLimparAreaInput();
                 uiMostrarFeedback("*** BOSS DERROTADO! +50pts ***", GREEN, 1500, MAXX / 2 - 10, MAXY / 2);
+                if(boss->eh_final && boss->fase_2 == 0){
+                    uiLimparAreaInput();
+                    uiMostrarFeedback("*** EU ACHO QUE NÃO! -100pts ***", RED, 2000, MAXX / 2 - 10, MAXY / 2);
+                    *score -= 100;
+                    boss->ativo = 1;
+                    boss->fase_2 = 1;
+                    uiLimparAreaInput();
+                    uiMostrarFeedback("*** EU ESTOU MAIS FORTE! +vida ***", RED, 2000, MAXX / 2 - 10, MAXY / 2);
+                    boss->vida += 100;
+                    boss->velocidade = 6;
+                    boss->disparos = 1; 
+                    uiLimparAreaInput();
+                    uiMostrarFeedback("*** EU ESTOU MAIS RÁPIDO! + velocidade ***", RED, 2000, MAXX / 2 - 10, MAXY / 2);
+                    uiLimparAreaInput();
+                    uiMostrarFeedback("*** E VOCÊ CONTINUA FRACO! ***", RED, 2000, MAXX / 2 - 10, MAXY / 2);
+                }
+                else if(boss->fase_2 == 1){
+                    uiMostrarFeedback("*** VOCÊ SALVOU NOSSA TERRA! +150pts ***", GREEN, 1500, MAXX / 2 - 10, MAXY / 2);
+                }
                 
             } else {
                 jogador->lives--;
