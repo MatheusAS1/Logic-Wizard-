@@ -23,5 +23,6 @@ void npcMostrarDialogoGuilherme(int x, int y);
 void npcLimparDialogo(int x, int y, int largura, int linhas);
 
 void exibirTelaIntroducao();
+void exibirNarrativaHistoria();
 
 #endif /* __NPC_H__ */

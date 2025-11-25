@@ -26,6 +26,8 @@
 
 void iniciarModoHistoria()
 {
+    exibirNarrativaHistoria();
+    
     screenInit(1);
     keyboardInit();
     timerInit(50); 

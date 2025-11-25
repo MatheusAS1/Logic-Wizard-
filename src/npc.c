@@ -5,6 +5,7 @@
 #include "character.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 void npcIniciar(NPC *npc, int x, int y, const char *nome) {
     if (!npc) return;
@@ -105,6 +106,142 @@ void npcLimparDialogo(int x, int y, int largura, int linhas) {
             printf(" ");
         }
     }
+}
+
+void exibirNarrativaHistoria() {
+    screenInit(1);
+    keyboardInit();
+    timerInit(100);
+    
+    const char *titulos[6] = {
+        "O INICIO DA JORNADA",
+        "A AMEACA DO SISTEMA CORROMPIDO",
+        "O CAOS DIGITAL",
+        "OS MESTRES LEGENDARIOS",
+        "A PROFECIA",
+        "SUA MISSAO"
+    };
+    
+    const char *telas[6][10] = {
+        {
+            "Ha muito tempo, em uma galaxia nao tao",
+            "distante...",
+            NULL
+        },
+        {
+            "A paz reinava no vasto Ciberverso, um reino digital onde linhas de",
+            "codigo dancavam em perfeita harmonia e algoritmos mantinham o",
+            "equilibrio de todas as aplicacoes.",
+            "",
+            "Contudo, das sombras binarias emergiu uma ameaca sombria:",
+            "o Nucleo Corrompido, uma entidade criada a partir de falhas",
+            "acumuladas, negligencia humana e bugs esquecidos.",
+            NULL
+        },
+        {
+            "A contaminacao espalhou-se como um virus ancestral. Programas antes",
+            "pacificos tornaram-se instaveis, interfaces quebraram e modulos",
+            "inteiros passaram a agir de forma imprevisivel. O caos digital",
+            "estava instalado.",
+            "",
+            "Diante desse cenario, o Conselho dos Desenvolvedores convocou dois",
+            "mestres legendarios:",
+            NULL
+        },
+        {
+            "Diego, o Mago do Codigo, capaz de manipular estruturas e linguagens",
+            "com simples movimentos de suas maos, transformando caos em elegancia.",
+            "",
+            "Guilherme, o Mago da Logica, guardiao das regras, mestre dos fluxos",
+            "e decisoes, cuja mente era considerada um dos mais poderosos",
+            "processadores vivos.",
+            "",
+            "Mas mesmo com todo seu poder, os dois magos sabiam que nao poderiam",
+            "enfrentar o Nucleo Corrompido sozinhos.",
+            NULL
+        },
+        {
+            "Por isso, recorreram a uma antiga profecia, que falava sobre a",
+            "chegada de um(a) jovem aprendiz vindo do mundo real, dotado de",
+            "coragem, curiosidade e um espirito capaz de aprender rapidamente.",
+            "",
+            "E assim voce foi convocado...",
+            NULL
+        },
+        {
+            "Transportado para dentro do Ciberverso, sua missao e clara: usar",
+            "ferramentas sagradas do desenvolvimento, enfrentar criaturas feitas",
+            "de erros fatais, restaurar trechos de codigo destruidos e eliminar",
+            "os temidos bugs que ameacam devorar toda a galaxia digital.",
+            "",
+            "O destino do sistema — e talvez de todo o universo conectado —",
+            "esta agora em suas maos.",
+            "",
+            "A batalha pela estabilidade acaba de comecar...",
+            NULL
+        }
+    };
+    
+    int pular = 0;
+    
+    for (int tela = 0; tela < 6 && !pular; tela++) {
+        screenClear();
+        
+        int titulo_x = (MAXX / 2) - (strlen(titulos[tela]) / 2);
+        screenGotoxy(titulo_x, 5);
+        screenSetColor(YELLOW, DARKGRAY);
+        screenSetBold();
+        printf("%s", titulos[tela]);
+        screenSetNormal();
+        
+        screenGotoxy(titulo_x - 5, 6);
+        screenSetColor(YELLOW, DARKGRAY);
+        for (int i = 0; i < strlen(titulos[tela]) + 10; i++) {
+            printf("=");
+        }
+        
+        int linha_inicial = 9;
+        int linha_atual = linha_inicial;
+        
+        for (int i = 0; telas[tela][i] != NULL; i++) {
+            int x = (MAXX / 2) - (strlen(telas[tela][i]) / 2);
+            screenGotoxy(x, linha_atual);
+            
+            if (strlen(telas[tela][i]) == 0) {
+                screenSetColor(WHITE, DARKGRAY);
+            } else if (tela == 0) {
+                screenSetColor(CYAN, DARKGRAY);
+            } else {
+                screenSetColor(WHITE, DARKGRAY);
+            }
+            
+            printf("%s", telas[tela][i]);
+            screenSetNormal();
+            linha_atual++;
+        }
+        
+        screenGotoxy((MAXX / 2) - 25, MAXY - 3);
+        screenSetColor(YELLOW, DARKGRAY);
+        printf("[ENTER: Continuar | ESPACO: Pular historia]");
+        
+        screenUpdate();
+        
+        while (1) {
+            if (keyhit()) {
+                int tecla = readch();
+                if (tecla == 10 || tecla == 13) {
+                    break;
+                } else if (tecla == ' ' || tecla == 32) {
+                    pular = 1;
+                    break;
+                }
+            }
+        }
+    }
+    
+    keyboardDestroy();
+    screenDestroy();
+    timerDestroy();
 }
 
 void exibirTelaIntroducao() {

@@ -72,14 +72,12 @@ void iniciarModoArcade()
     characterDraw(&jogador);
     screenUpdate();
 
-    // Spawn inicial de inimigos
     for (int i = 0; i < base_enemy_count; ++i) {
         int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
         inimigoSpawn(&gi, x, y, base_enemy_life, velocidade_inicial);
     }
 
-    // Mensagem inicial
     screenGotoxy(MAXX / 2 - 15, MAXY / 2);
     screenSetColor(CYAN, DARKGRAY);
     screenSetBold();
@@ -128,22 +126,18 @@ void iniciarModoArcade()
                 }
             }
 
-            // Quando todos os inimigos são derrotados, avança de nível
             if (gi.quantidade == 0) {
                 level++;
                 
-                // Aumenta progressivamente a dificuldade
-                int novos_inimigos = base_enemy_count + (level / 2);  // +1 inimigo a cada 2 níveis
-                int vida_inimigos = base_enemy_life + (level / 3);     // +1 vida a cada 3 níveis
-                int velocidade = velocidade_inicial - (level / 4);     // Reduz velocidade (aumenta dificuldade) a cada 4 níveis
-                if (velocidade < 3) velocidade = 3;                     // Velocidade mínima
+                int novos_inimigos = base_enemy_count + (level / 2);  
+                int vida_inimigos = base_enemy_life + (level / 3);     
+                int velocidade = velocidade_inicial - (level / 4);    
+                if (velocidade < 3) velocidade = 3;                    
 
-                // Mensagem de novo nível
                 char msg[50];
                 sprintf(msg, "*** NÍVEL %d ***", level);
                 uiMostrarFeedback(msg, CYAN, 1000, MAXX / 2 - 10, MAXY / 2);
                 
-                // Spawn de novos inimigos
                 gerenciadorInimigoIniciar(&gi, novos_inimigos);
                 for (int i = 0; i < novos_inimigos; ++i) {
                     int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
@@ -151,7 +145,6 @@ void iniciarModoArcade()
                     inimigoSpawn(&gi, x, y, vida_inimigos, velocidade);
                 }
                 
-                // Adiciona mais baús a cada 3 níveis
                 if (level % 3 == 0 && gb.quantidade < 15) {
                     int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
                     int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
@@ -164,7 +157,6 @@ void iniciarModoArcade()
             processarColisaoJogadorInimigos(&jogador, &gi, px, py);
             processarColisaoProjeteis(&gp, &gi, NULL, &gb, &score, 0, 0);
 
-            // Renderizar (sem boss)
             Boss boss_vazio;
             memset(&boss_vazio, 0, sizeof(Boss));
             renderizarJogo(&jogador, &gp, &gi, &gb, &boss_vazio, 0, sl, level);
@@ -183,7 +175,6 @@ void iniciarModoArcade()
                 recorde_atual = score;
             }
             
-            // HUD adaptado (sem vida de boss)
             uiDesenharHUDSuperior(score, level, jogador.lives, gi.quantidade, 
                                  0, gb.quantidade, fps_atual, recorde_atual);
             
@@ -192,7 +183,6 @@ void iniciarModoArcade()
         }
     }
 
-    // Game Over
     if (jogador.lives <= 0) {
         screenClear();
         screenGotoxy(MAXX / 2 - 10, MAXY / 2 - 3);

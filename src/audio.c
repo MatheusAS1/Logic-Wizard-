@@ -27,8 +27,6 @@ int audioInit(void) {
     Mix_AllocateChannels(8);
     Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG);
     
-    printf("[AUDIO] ✓ Sistema de áudio inicializado\n");
-    printf("[AUDIO] ✓ Config: 44.1kHz, Stereo, Buffer: 16KB (anti-chiado WSL)\n");
     return 0;
 }
 
@@ -47,8 +45,6 @@ void audioQuit(void) {
     }
     
     Mix_Quit();
-    
-    printf("[AUDIO] Sistema de áudio finalizado.\n");
 }
 
 int audioPlayMusic(const char *filepath, int loops) {
@@ -71,30 +67,24 @@ int audioPlayMusic(const char *filepath, int loops) {
         return -1;
     }
     
-    printf("[AUDIO] ✓ Música '%s' tocando (formato: %s)\n", 
-           filepath, 
-           (strstr(filepath, ".ogg") || strstr(filepath, ".OGG")) ? "OGG" : "MP3");
     return 0;
 }
 
 void audioPauseMusic(void) {
     if (Mix_PlayingMusic()) {
         Mix_PauseMusic();
-        printf("[AUDIO] Música pausada.\n");
     }
 }
 
 void audioResumeMusic(void) {
     if (Mix_PausedMusic()) {
         Mix_ResumeMusic();
-        printf("[AUDIO] Música retomada.\n");
     }
 }
 
 void audioStopMusic(void) {
     if (Mix_PlayingMusic()) {
         Mix_HaltMusic();
-        printf("[AUDIO] Música parada.\n");
     }
 }
 
@@ -103,7 +93,6 @@ void audioSetMusicVolume(int volume) {
     if (volume > 128) volume = 128;
     
     Mix_VolumeMusic(volume);
-    printf("[AUDIO] Volume ajustado para %d/128.\n", volume);
 }
 
 int audioIsMusicPlaying(void) {
@@ -154,6 +143,4 @@ void audioSetSoundVolume(int volume) {
             Mix_VolumeChunk(sounds[i], volume);
         }
     }
-    
-    printf("[AUDIO] Volume de efeitos sonoros: %d/128\n", volume);
 }

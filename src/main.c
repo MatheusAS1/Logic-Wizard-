@@ -22,7 +22,6 @@ int main()
         audioSetMusicVolume(20);
         
         if (audioPlayMusic("assets/music/menu_music.ogg", -1) != 0) {
-            printf("[MAIN] OGG não encontrado, tentando MP3...\n");
             audioPlayMusic("assets/music/menu_music.mp3", -1);
         }
     }
