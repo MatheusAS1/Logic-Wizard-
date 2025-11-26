@@ -1,115 +1,132 @@
-# Projeto - Programação Imperativa e Funcional e Lógica (2025.2)
----
-
 # 🧙‍♂️ Logic Wizard
 
-**Logic Wizard** é um jogo em C que une **Programação Imperativa e Funcional** com **Lógica Proposicional**.
-Você assume o papel de um mago que precisa usar **magia e lógica** para derrotar as forças da escuridão que dominam o reino.
+> Um jogo educacional que une **lógica proposicional** e **diversão**, desenvolvido pelo **Los Macacos Studio**.
 
 ---
 
-## 🎯 Objetivo do Jogo
-
-Sobreviver a ondas de inimigos, derrotando cada um com seus poderes mágicos e seus conhecimentos em **equivalências lógicas**.
-A cada nova onda, a dificuldade aumenta — e com ela, a sua pontuação.
-
----
-
-## 🕹️ Mecânicas Principais
-
-* O jogador controla o **mago** que se movimenta pelo cenário.
-* O jogo é dividido em **ondas de inimigos (waves)**, seguidas por **chefes (bosses)**.
-* O objetivo é **derrotar todos os inimigos** da onda para avançar.
+## 👥 Autores
+- **Allysson Muniz**
+- **Lucas Chaves**
+- **Fernando Marinho**
+- **Matheus Andrade**
 
 ---
 
-## ⚔️ Controles
+## 🧠 Contexto do Jogo
 
-| Ação          | Tecla             |
-| ------------- | ----------------- |
-| Mover-se      | Setas direcionais |
-| Ataque básico | **V**             |
-| Ataque forte  | **F**             |
+Em um universo digital, dois magos poderosos mantêm o equilíbrio do sistema:
+- **Diego – O Mago do Código**
+- **Guilherme – O Mago da Lógica**
 
----
+O caos começa quando o **Núcleo Corrompido** surge, espalhando bugs e ameaçando a estabilidade do sistema. Você é o programa escolhido para restaurar a harmonia, utilizando **Equivalências Lógicas e Tabelas Verdade** para derrotar os inimigos e reparar o universo digital.
 
-## ❤️ Vidas e Pontuação
-
-* O jogador possui **3 vidas**, restauradas ao início de cada nova onda.
-* Cada inimigo derrotado concede **pontos**, variando conforme o tipo.
-* A **pontuação total** é acumulada até o final da partida.
-* Ao término da run, o jogador poderá **salvar sua maior pontuação**.
+> O destino do sistema está nas suas mãos.
 
 ---
 
-## 👾 Inimigos
+## 🎮 Mecânicas Principais
 
-* Os inimigos surgem **fora da tela** e caminham em direção ao jogador.
-* Haverá **diferentes tipos de inimigos**, cada um com **comportamento e pontuação específicos**.
+### 📌 Movimentação – Teclas **WASD**
+| Tecla | Ação |
+|------|------|
+| **W** | Move para cima |
+| **A** | Move para a esquerda |
+| **S** | Move para baixo |
+| **D** | Move para a direita |
 
----
+### 🔫 Ataques
+| Tecla | Ação |
+|------|------|
+| **V** | Disparo frontal (1 de dano) |
+| **F** | Disparo especial – 4 direções (4 de dano) |
 
-## 🧩 Bosses e Lógica Proposicional
+### 📦 Baús de Recompensa
+Ao derrotar inimigos, baús podem surgir. Para abri-los, você deve resolver uma **tabela verdade**:
 
-* Ao final de cada onda, um **Boss** aparecerá.
-* Após causar dano suficiente, **uma expressão lógica aparecerá sobre a cabeça do boss**.
-* Para derrotá-lo definitivamente, o jogador deve **digitar uma equivalência lógica correta**.
+- `V` → Verdadeiro  
+- `F` → Falso  
+- `Enter` → Enviar resposta  
 
-### Exemplo:
+Se acertar:
+✔️ Ganha pontos  
+✔️ Ganha vida extra
 
-| Expressão apresentada | Equivalência correta |
-| --------------------- | -------------------- |
-| `p -> q`              | `~p v q`             |
+Se errar duas vezes:
+❌ O baú desaparece
 
-* O uso da **lógica proposicional** é essencial para progredir no jogo.
-* A dificuldade lógica e os tipos de expressões aumentam conforme as ondas avançam.
-
----
-
-## 🧠 Conceitos Envolvidos
-
-### Programação Imperativa e Funcional (C)
-
-* Controle de fluxo, estruturas condicionais e repetição.
-* Estrutura modular de código e funções reutilizáveis.
-* Manipulação de dados e estados (vidas, pontuação, posição, inimigos).
-
-### Lógica Proposicional
-
-* Conectivos lógicos: `¬` (negação), `∧` (conjunção), `∨` (disjunção), `→` (implicação), `↔` (bicondicional).
-* Equivalências lógicas clássicas.
-* Aplicação prática da lógica na resolução de desafios dentro do jogo.
+### 👑 Chefes
+Ao alcançar certos níveis de dano, os chefes congelam e exibem **uma expressão lógica**.  
+Digite a **equivalência lógica correta** para derrotá-lo!
 
 ---
 
-## 🏆 Sistema de Progresso
+## 📜 Menu do Jogo
 
-* A cada onda:
-
-  * Aumenta a **quantidade e velocidade** dos inimigos.
-  * Aumenta a **complexidade** das expressões lógicas dos bosses.
-  * Incrementa o **nível de desafio e pontuação**.
-
----
-
-## 💾 Sistema de Pontuação Máxima
-
-* Ao fim de cada run, o jogo exibirá a **pontuação final**.
-* A maior pontuação será **salva em arquivo**, permitindo competir consigo mesmo ou com outros jogadores.
+| Opção | Descrição |
+|------|-----------|
+| **História** | Modo principal com narrativa e chefes |
+| **Extermínio** | Modo sobrevivência – foco em pontuação |
+| **Tutorial** | Aprenda os comandos com os magos |
+| **Créditos** | Exibe os criadores do jogo |
+| **Sair** | Fecha o jogo |
 
 ---
 
-## 👥 Membros do Projeto
+## 🧮 Sistema de Pontuação
 
-- **Allysson Muniz** - [@allyssonifx](https://github.com/allyssonifx)  
-- **Lucas Chaves** - [@lucaschavessf](https://github.com/lucaschavessf)  
-- **Fernando Marinho** - [@Fernando2732](https://github.com/Fernando2732)  
-- **Matheus Andrade** - [@MatheusAS1](https://github.com/MatheusAS1)
+A pontuação é baseada em:
+- Inimigos derrotados  
+- Chefes eliminados  
+- Resolução de baús  
 
-## 🧠 Disciplina
+Os dados são salvos em um **arquivo `.txt`**, permitindo acompanhar e quebrar o **seu high score**, especialmente no modo *Extermínio*.
 
-**Programação Imperativa e Funcional - 2025.2**
+---
 
-## 🏫 Instituição
+## 🕹️ Modos de Jogo
 
-**CESAR School**
+### 📖 **História**
+Enfrente hordas progressivas até o **grande chefão na horda 10**.  
+As expressões lógicas ficam cada vez mais difíceis!
+
+### 💣 **Extermínio**
+Sem bosses. Sem história. Apenas **ação e pontuação**.  
+Seu objetivo é eliminar o máximo de inimigos e sobreviver.
+
+---
+
+## 🛠️ Como Jogar (Instalação)
+
+⚠️ **O jogo funciona apenas em Linux e MacOS**
+
+### 1️⃣ Instale o compilador C:
+sudo apt update
+sudo apt install build-essential manpages-dev
+
+### 2️⃣ Instale bibliotecas de áudio (SDL2):
+sudo apt-get install libsdl2-dev libsdl2-mixer-dev
+
+### 3️⃣ Clone o repositório:
+git clone https://github.com/MatheusAS1/Logic-Wizard-.git
+
+### 4️⃣ Acesse o diretório:
+cd nome-da-pasta
+
+### 5️⃣ Execute o jogo:
+make run
+
+### 6️⃣ 🎉 Aproveite e divirta-se!
+
+---
+
+## 🌟 Implementações Futuras
+
+- Novas tabelas lógicas  
+- Sistema de mercador com itens  
+- Pontuação como moeda de troca  
+- Expansão de modos de jogo  
+
+---
+
+🧠 *“A lógica é a magia que governa o código.”*  
+🛠 Feito com dedicação por **Los Macacos Studio**

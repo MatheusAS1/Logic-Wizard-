@@ -2,13 +2,15 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
+#include "audio.h"
 #include <stdio.h>
 #include <string.h>
 
 #define OP_JOGAR 1
-#define OP_TUTORIAL 2
-#define OP_CREDITOS 3
-#define OP_SAIR 4
+#define OP_ARCADE 2
+#define OP_TUTORIAL 3
+#define OP_CREDITOS 4
+#define OP_SAIR 5
 
 void desenharTitulo(int x, int y) {
     screenSetColor(MAGENTA, DARKGRAY);
@@ -47,7 +49,7 @@ int exibirMenuPrincipal() {
     int tituloX = centroX - 30; 
     int tituloY = 4;
     
-    int menuX = centroX - 5; 
+    int menuX = centroX - 10; 
     int menuY = 12;
 
     screenClear();
@@ -64,20 +66,21 @@ int exibirMenuPrincipal() {
 
             if (tecla == 'w' || tecla == 'W') {
                 opcaoSelecionada--;
-                if (opcaoSelecionada < 1) opcaoSelecionada = 4;
+                if (opcaoSelecionada < 1) opcaoSelecionada = 5;
             } 
             else if (tecla == 's' || tecla == 'S') {
                 opcaoSelecionada++;
-                if (opcaoSelecionada > 4) opcaoSelecionada = 1;
+                if (opcaoSelecionada > 5) opcaoSelecionada = 1;
             }
             else if (tecla == 10 || tecla == 13) { 
                 rodando = 0; 
             }
 
             desenharOpcao(menuX, menuY,     "MODO HISTÓRIA", (opcaoSelecionada == OP_JOGAR));
-            desenharOpcao(menuX, menuY + 2, "TUTORIAL ", (opcaoSelecionada == OP_TUTORIAL));
-            desenharOpcao(menuX, menuY + 4, "CREDITOS ", (opcaoSelecionada == OP_CREDITOS));
-            desenharOpcao(menuX, menuY + 6, "SAIR     ", (opcaoSelecionada == OP_SAIR));
+            desenharOpcao(menuX, menuY + 2, "MODO EXTERMÍNIO", (opcaoSelecionada == OP_ARCADE));
+            desenharOpcao(menuX, menuY + 4, "TUTORIAL     ", (opcaoSelecionada == OP_TUTORIAL));
+            desenharOpcao(menuX, menuY + 6, "CREDITOS     ", (opcaoSelecionada == OP_CREDITOS));
+            desenharOpcao(menuX, menuY + 8, "SAIR         ", (opcaoSelecionada == OP_SAIR));
 
             screenGotoxy(centroX - 15, MAXY - 2);
             screenSetColor(LIGHTGRAY, DARKGRAY);

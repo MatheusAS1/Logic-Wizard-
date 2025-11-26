@@ -11,9 +11,9 @@ void renderizarJogo(Character *jogador, GerenciadorProjetil *gp,
     gerenciadorBauDesenhar(gb);
     if (boss_spawned && boss && boss->ativo) {
         if (boss->eh_final) {
-            bossFinalDesenhar(boss); // Função nova
+            bossFinalDesenhar(boss); 
         } else {
-            bossDesenhar(boss);      // Função antiga
+            bossDesenhar(boss);      
         }
         if (boss->desafio_ativo) {
             bossDesenharEquivalencia(boss);
