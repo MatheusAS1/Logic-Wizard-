@@ -42,7 +42,7 @@ void processarColisaoProjeteis(GerenciadorProjetil *gp, GerenciadorInimigo *gi,
                 acertou_inimigo = 1;
 
                 if (ini->vida <= 0) {
-                    if (rand() % 100 < 30) { 
+                    if (rand() % 100 < 8) { 
                         bauSpawn(gb, ini->x, ini->y, "~p");
                     }
                     ini->ativo = 0;
@@ -81,7 +81,7 @@ void processarColisaoProjeteis(GerenciadorProjetil *gp, GerenciadorInimigo *gi,
                 acertou_inimigo = 1;
                 
                 if (ini->vida <= 0) {
-                    if (rand() % 100 < 30) {
+                    if (rand() % 100 < 8) {
                         bauSpawn(gb, ini->x, ini->y, "~p");
                     }
                     ini->ativo = 0;

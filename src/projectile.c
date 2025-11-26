@@ -33,7 +33,7 @@ void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
     p->ativo = 1;
     p->aparencia = "*";
     p->contador_frames = 0;
-    p->velocidade = VELOCIDADE_PROJETIL+100;
+    p->velocidade = VELOCIDADE_PROJETIL; 
     p->dano = 1;
 
     gp->quantidade_simples++;
@@ -56,7 +56,10 @@ void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy
     p->ativo = 1;
     p->aparencia = "@";
     p->contador_frames = 0;
-    p->velocidade = VELOCIDADE_PROJETIL * 3;
+    
+    int vel = VELOCIDADE_PROJETIL / 2;
+    if (vel < 1) vel = 1; 
+    p->velocidade = vel;
     
     if (soundShootId >= 0) {
         audioPlaySound(soundShootId, 35);
@@ -82,7 +85,7 @@ void gerenciadorProjetilDesenhar(const GerenciadorProjetil *gp)
         const Projetil *p = &gp->projeteis[MAX_PROJETIL_SIMPLES + i];
         if (p->ativo) {
             screenGotoxy(p->x, p->y);
-            screenSetColor(WHITE, DARKGRAY);
+            screenSetColor(YELLOW, DARKGRAY); // Mudei cor pra destacar
             printf("%s", p->aparencia);
         }
     }
@@ -115,19 +118,30 @@ void gerenciadorProjetilAtualizar(GerenciadorProjetil *gp)
     for (int i = 0; i < gp->quantidade_simples; ++i) {
         Projetil *p = &gp->projeteis[i];
         if (!p->ativo) continue;
-        p->x += p->dx;
-        p->y += p->dy;
-        if (p->x < MINX + 1 || p->x > MAXX - 3 || p->y < MINY + 1 || p->y > MAXY - 1) {
-            p->ativo = 0;
+        p->contador_frames++;
+        if (p->contador_frames >= p->velocidade) {
+            p->x += p->dx;
+            p->y += p->dy;
+            p->contador_frames = 0;
+            
+            if (p->x < MINX + 1 || p->x > MAXX - 3 || p->y < MINY + 1 || p->y > MAXY - 1) {
+                p->ativo = 0;
+            }
         }
     }
+
     for (int i = 0; i < gp->quantidade_especial; ++i) {
         Projetil *p = &gp->projeteis[MAX_PROJETIL_SIMPLES + i];
         if (!p->ativo) continue;
-        p->x += p->dx;
-        p->y += p->dy;
-        if (p->x < MINX + 1 || p->x > MAXX - 3 || p->y < MINY + 1 || p->y > MAXY - 1) {
-            p->ativo = 0;
+
+        p->contador_frames++;
+        if (p->contador_frames >= p->velocidade) {
+            p->x += p->dx;
+            p->y += p->dy;
+            p->contador_frames = 0; 
+            if (p->x < MINX + 1 || p->x > MAXX - 3 || p->y < MINY + 1 || p->y > MAXY - 1) {
+                p->ativo = 0;
+            }
         }
     }
 }
@@ -138,7 +152,7 @@ void gerenciadorProjetilCompactar(GerenciadorProjetil *gp)
 
     int j = 0;
     for (int i = 0; i < gp->quantidade_simples; ++i) {
-        if (gp->projeteis[i].ativo) {
+        if (gp->projeteis[i].ativo) { 
             if (i != j) {
                 gp->projeteis[j] = gp->projeteis[i];
             }
@@ -150,7 +164,7 @@ void gerenciadorProjetilCompactar(GerenciadorProjetil *gp)
     j = 0;
     for (int i = 0; i < gp->quantidade_especial; ++i) {
         int idx = MAX_PROJETIL_SIMPLES + i;
-        if (gp->projeteis[idx].ativo) {
+        if (gp->projeteis[idx].ativo) { 
             if (idx != MAX_PROJETIL_SIMPLES + j) {
                 gp->projeteis[MAX_PROJETIL_SIMPLES + j] = gp->projeteis[idx];
             }

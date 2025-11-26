@@ -18,8 +18,6 @@ void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil
     gerenciadorInimigoIniciar(gi, new_enemy_count);
     gerenciadorProjetilIniciar(gp);
 
-    jogador->lives = 3;
-
     for (int k = 0; k < new_enemy_count; ++k) {
         int x = (rand() % (MAXX - MINX - 6)) + MINX + 2;
         int y = (rand() % (MAXY - MINY - 2)) + MINY + 1;
