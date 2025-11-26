@@ -81,7 +81,7 @@ void iniciarModoArcade()
     screenGotoxy(MAXX / 2 - 15, MAXY / 2);
     screenSetColor(CYAN, DARKGRAY);
     screenSetBold();
-    printf("*** MODO ARCADE ***");
+    printf("*** MODO EXTERMÍNIO ***");
     screenSetNormal();
     screenGotoxy(MAXX / 2 - 20, MAXY / 2 + 2);
     screenSetColor(WHITE, DARKGRAY);

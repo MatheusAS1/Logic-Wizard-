@@ -20,9 +20,12 @@ int npcEstaProximo(const NPC *npc, int jogador_x, int jogador_y, int distancia_m
 
 void npcMostrarDialogoDiego(int x, int y);
 void npcMostrarDialogoGuilherme(int x, int y);
+void npcMostrarDialogoDiegoFinal(int x, int y);
+void npcMostrarDialogoGuilhermeFinal(int x, int y);
 void npcLimparDialogo(int x, int y, int largura, int linhas);
 
 void exibirTelaIntroducao();
 void exibirNarrativaHistoria();
+void exibirTelaFinal();
 
 #endif /* __NPC_H__ */

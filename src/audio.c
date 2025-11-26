@@ -14,12 +14,10 @@ int audioInit(void) {
     SDL_SetHint(SDL_HINT_AUDIO_RESAMPLING_MODE, "1");
     
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "[AUDIO] Erro ao inicializar SDL: %s\n", SDL_GetError());
         return -1;
     }
     
     if (Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 16384) < 0) {
-        fprintf(stderr, "[AUDIO] Erro ao inicializar SDL_mixer: %s\n", Mix_GetError());
         SDL_Quit();
         return -1;
     }
@@ -56,12 +54,10 @@ int audioPlayMusic(const char *filepath, int loops) {
     
     currentMusic = Mix_LoadMUS(filepath);
     if (currentMusic == NULL) {
-        fprintf(stderr, "[AUDIO] Erro ao carregar música '%s': %s\n", filepath, Mix_GetError());
         return -1;
     }
    
     if (Mix_FadeInMusic(currentMusic, loops, 500) < 0) {
-        fprintf(stderr, "[AUDIO] Erro ao tocar música: %s\n", Mix_GetError());
         Mix_FreeMusic(currentMusic);
         currentMusic = NULL;
         return -1;
@@ -107,13 +103,11 @@ int audioIsMusicPaused(void) {
 
 int audioLoadSound(const char *filepath) {
     if (soundCount >= MAX_SOUNDS) {
-        fprintf(stderr, "[AUDIO] Limite de sons atingido (%d)\n", MAX_SOUNDS);
         return -1;
     }
     
     Mix_Chunk *sound = Mix_LoadWAV(filepath);
     if (sound == NULL) {
-        fprintf(stderr, "[AUDIO] Erro ao carregar som '%s': %s\n", filepath, Mix_GetError());
         return -1;
     }
     

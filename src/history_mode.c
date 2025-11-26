@@ -27,7 +27,6 @@
 void iniciarModoHistoria()
 {
     exibirNarrativaHistoria();
-    
     screenInit(1);
     keyboardInit();
     timerInit(50); 
@@ -79,7 +78,7 @@ void iniciarModoHistoria()
         "Sanguinário da tautologia",        
         "Destruidor da tabela verdade",         
         "Malenia lamina de Utron",        
-        "UTRON O TENEBROSO"       
+        "NÚCLEO CORROMPIDO (O TENEBROSO)"       
     };
 
     SistemaLogica *sl = (SistemaLogica*)malloc(sizeof(SistemaLogica));
@@ -193,7 +192,7 @@ void iniciarModoHistoria()
                     uiMostrarFeedback(mensagem_boss, RED, 2000, MAXX / 2 - 15, MAXY / 2);
                     if(level == 10){
                         bossFinalIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, 
-                         150, 
+                         100, 
                          7, 
                          sl);
                     }
@@ -210,7 +209,7 @@ void iniciarModoHistoria()
 
             if (boss_spawned && boss.ativo) {
                 if (!desafioBossEstaAtivo(&desafio_boss) && !boss.desafio_ativo) {
-                    if (boss.vida <= 8 ) {
+                    if (boss.vida <= 6 ) {
                         boss.desafio_ativo = 1;
                         desafioBossAtivar(&desafio_boss);
                         uiMostrarFeedback("*** DESAFIO LOGICO ATIVADO! ***", YELLOW, 1000, 
@@ -275,6 +274,9 @@ void iniciarModoHistoria()
         screenUpdate();
         sleep(5);
     }
+    else{
+        exibirTelaFinal();
+    }
     
     storageSalvarRecorde(recorde_atual);
 
@@ -286,8 +288,9 @@ void iniciarModoHistoria()
     logicaDestruir(sl);
     free(sl); 
     sl = NULL;
-
+    
     keyboardDestroy();
     screenDestroy();
     timerDestroy();
+    
 }

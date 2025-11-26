@@ -13,9 +13,6 @@ void gerenciadorProjetilIniciar(GerenciadorProjetil *gp)
     memset(gp->projeteis, 0, sizeof(gp->projeteis));
     
     soundShootId = audioLoadSound("assets/sounds/shoot.wav");
-    if (soundShootId < 0) {
-        printf("[PROJECTILE] Aviso: Som de tiro não carregado (jogo continua sem som)\n");
-    }
 }
 
 void gerenciadorProjetilDestruir(GerenciadorProjetil *gp)

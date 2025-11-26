@@ -49,7 +49,7 @@ int exibirMenuPrincipal() {
     int tituloX = centroX - 30; 
     int tituloY = 4;
     
-    int menuX = centroX - 5; 
+    int menuX = centroX - 10; 
     int menuY = 12;
 
     screenClear();
@@ -77,7 +77,7 @@ int exibirMenuPrincipal() {
             }
 
             desenharOpcao(menuX, menuY,     "MODO HISTÓRIA", (opcaoSelecionada == OP_JOGAR));
-            desenharOpcao(menuX, menuY + 2, "MODO ARCADE  ", (opcaoSelecionada == OP_ARCADE));
+            desenharOpcao(menuX, menuY + 2, "MODO EXTERMÍNIO", (opcaoSelecionada == OP_ARCADE));
             desenharOpcao(menuX, menuY + 4, "TUTORIAL     ", (opcaoSelecionada == OP_TUTORIAL));
             desenharOpcao(menuX, menuY + 6, "CREDITOS     ", (opcaoSelecionada == OP_CREDITOS));
             desenharOpcao(menuX, menuY + 8, "SAIR         ", (opcaoSelecionada == OP_SAIR));
