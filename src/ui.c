@@ -17,11 +17,15 @@ void uiLimparAreaInput() {
 }
 
 void uiDesenharHUDSuperior(int score, int level, int vidas, int inimigos, 
-                           int boss_vida, int baus, int fps, int recorde) {
+                           int boss_vida, int baus, int fps, int recorde, int history_mode) {
     screenGotoxy(3, 1);
     screenSetColor(GREEN, DARKGRAY);
-    printf("| Hi-Score: %d | Score: %d | Level: %d | Vidas: %d | Inimigos: %d | Boss: %d | Baus: %d | FPS: %d", 
-           recorde, score, level, vidas, inimigos, boss_vida, baus, fps);
+    if (history_mode==1){
+        printf("| Level: %d | Vidas: %d | Inimigos: %d | Boss: %d | Baus: %d | FPS: %d | Modo Historia |", level, vidas, inimigos, boss_vida, baus, fps);
+    } else {
+        printf("| Hi-Score: %d | Score: %d | Level: %d | Vidas: %d | Inimigos: %d | Baus: %d | FPS: %d | Modo Arcade |", 
+           recorde, score, level, vidas, inimigos, baus, fps);
+    }
 }
 
 void uiDesenharHUDInferior(int px, int py) {

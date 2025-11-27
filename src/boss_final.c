@@ -7,7 +7,7 @@
 
 void bossFinalIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogica *sl) {
 
-    bossIniciar(boss, x, y, vida, velocidade, sl);
+    bossIniciar(boss, x, y, vida, velocidade, 0,sl);
     
 
     boss->eh_final = 1;

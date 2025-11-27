@@ -57,7 +57,7 @@ void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy
     p->aparencia = "@";
     p->contador_frames = 0;
     
-    int vel = VELOCIDADE_PROJETIL / 2;
+    int vel = VELOCIDADE_PROJETIL + 1;
     if (vel < 1) vel = 1; 
     p->velocidade = vel;
     
@@ -85,7 +85,7 @@ void gerenciadorProjetilDesenhar(const GerenciadorProjetil *gp)
         const Projetil *p = &gp->projeteis[MAX_PROJETIL_SIMPLES + i];
         if (p->ativo) {
             screenGotoxy(p->x, p->y);
-            screenSetColor(YELLOW, DARKGRAY); // Mudei cor pra destacar
+            screenSetColor(YELLOW, DARKGRAY); 
             printf("%s", p->aparencia);
         }
     }

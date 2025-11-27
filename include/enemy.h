@@ -35,7 +35,7 @@ typedef struct {
     int contador_frames;
     int desafio_ativo;
     Equivalencia equivalencia;
-    
+    int variante;
     int eh_final;          
     int timer_tiro;
     int fase_2;  
@@ -50,7 +50,7 @@ void gerenciadorInimigoDesenhar(const GerenciadorInimigo *gi);
 void gerenciadorInimigoLimpar(const GerenciadorInimigo *gi);
 void gerenciadorInimigoAtualizar(GerenciadorInimigo *gi, int px, int py);
 void gerenciadorInimigoCompactar(GerenciadorInimigo *gi);
-void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogica *sl);
+void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, int variante, SistemaLogica *sl);
 void bossDesenhar(const Boss *boss);
 void bossLimpar(const Boss *boss);
 void bossAtualizar(Boss *boss, int px, int py);

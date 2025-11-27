@@ -48,7 +48,8 @@ void iniciarModoArcade()
     int level = 1;
     int score = 0;
     int velocidade_inicial = 10;
-    
+    int bordas_renovadas = 1;
+    int history_mode = 0;
     int recorde_atual = storageCarregarRecorde();
 
     SistemaLogica *sl = (SistemaLogica*)malloc(sizeof(SistemaLogica));
@@ -159,7 +160,7 @@ void iniciarModoArcade()
 
             Boss boss_vazio;
             memset(&boss_vazio, 0, sizeof(Boss));
-            renderizarJogo(&jogador, &gp, &gi, &gb, &boss_vazio, 0, sl, level);
+            renderizarJogo(&jogador, &gp, &gi, &gb, &boss_vazio, 0, sl, level,bordas_renovadas,history_mode);
 
             gerenciadorProjetilCompactar(&gp);
             gerenciadorInimigoCompactar(&gi);
@@ -176,8 +177,7 @@ void iniciarModoArcade()
             }
             
             uiDesenharHUDSuperior(score, level, jogador.lives, gi.quantidade, 
-                                 0, gb.quantidade, fps_atual, recorde_atual);
-            
+                                 0, gb.quantidade, fps_atual, recorde_atual,history_mode);
             uiDesenharHUDInferior(px, py);
             screenUpdate();
         }

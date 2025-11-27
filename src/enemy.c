@@ -125,7 +125,7 @@ int inimigoEncontrarMaisProximo(const GerenciadorInimigo *gi, int px, int py) {
 }
 
 
-void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogica *sl) {
+void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, int variante, SistemaLogica *sl) {
     if (!boss) return;
     boss->x = x;
     boss->y = y;
@@ -135,6 +135,7 @@ void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogi
     boss->velocidade = velocidade;
     boss->contador_frames = 0;
     boss->desafio_ativo = 0;
+    boss->variante = variante; 
     
     if (sl) {
         boss->equivalencia = logicaGetEquivalenciaAleatoria(sl);
@@ -143,15 +144,58 @@ void bossIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogi
 
 void bossDesenhar(const Boss *boss) {
     if (!boss || !boss->ativo) return;
+    
     screenGotoxy(boss->x, boss->y);
-    screenSetColor(RED, DARKGRAY);
-    printf("<(º#º)>.");
+    switch (boss->variante) {
+        case 1:
+            screenSetColor(LIGHTRED, DARKGRAY);
+            printf("<(o_o)>");
+            break;
+        case 2: 
+            screenSetColor(CYAN, DARKGRAY);
+            printf("[ Ò_Ó ]");
+            break;
+        case 3: 
+            screenSetColor(YELLOW, DARKGRAY);
+            printf("/X..X\\");
+            break;
+        case 4: 
+            screenSetColor(MAGENTA, DARKGRAY);
+            printf("{[#_#]}");
+            break;
+        case 5: 
+            screenSetColor(WHITE, DARKGRAY);
+            printf("~(ºoº)~");
+            break;
+        case 6: 
+            screenSetColor(GREEN, DARKGRAY);
+            printf("<$##$>");
+            break;
+        case 7: 
+            screenSetColor(BLUE, DARKGRAY);
+            printf("\\^v^v^/");
+            break;
+        case 8: 
+            screenSetColor(LIGHTRED, DARKGRAY);
+            printf("<<@_@>>");
+            break;
+        case 9: 
+            screenSetColor(RED, DARKGRAY);
+            screenSetBold();
+            printf("-(!_!)-");
+            screenSetNormal();
+            break;
+        default: 
+            screenSetColor(RED, DARKGRAY);
+            printf("<(º#º)>");
+            break;
+    }
 }
 
 void bossLimpar(const Boss *boss) {
     if (!boss || !boss->ativo) return;
     screenGotoxy(boss->x, boss->y);
-    printf("        "); 
+    printf("         "); 
 }
 
 void bossAtualizar(Boss *boss, int px, int py) {
@@ -168,8 +212,11 @@ void bossAtualizar(Boss *boss, int px, int py) {
 
 void bossDesenharEquivalencia(const Boss *boss) {
     if (!boss || !boss->ativo || !boss->desafio_ativo) return;
-    
-    screenGotoxy(boss->x - 2, boss->y - 1);
+    if(boss->y > 3){
+        screenGotoxy(boss->x - 2, boss->y - 1);
+    } else {
+        screenGotoxy(boss->x - 2, boss->y + 1);
+    }
     screenSetColor(boss->equivalencia.cor, DARKGRAY);
     screenSetBold();
     printf("[%s]", boss->equivalencia.forma_equivalente);
@@ -180,5 +227,7 @@ void bossLimparEquivalencia(const Boss *boss) {
     if (!boss) return;
     
     screenGotoxy(boss->x - 2, boss->y - 1);
+    printf("                    ");
+    screenGotoxy(boss->x - 2, boss->y + 1);
     printf("                    ");
 }

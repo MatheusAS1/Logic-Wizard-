@@ -27,13 +27,15 @@ int main()
     }
 
     int opcao = 0; 
-    
     while (opcao != 5) {
         opcao = exibirMenuPrincipal(); 
         
         switch(opcao) {
             case 1:
-                iniciarModoHistoria(); 
+                int final = iniciarModoHistoria(); 
+                if(final == 1){
+                    exibirCreditos();
+                }
                 break;
             case 2:
                 iniciarModoArcade();

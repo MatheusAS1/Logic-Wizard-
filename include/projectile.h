@@ -17,7 +17,7 @@ typedef struct {
 
 
 #define MAX_PROJETIL_SIMPLES 10
-#define MAX_PROJETIL_ESPECIAL 6
+#define MAX_PROJETIL_ESPECIAL 8
 #define VELOCIDADE_PROJETIL 1
 
 typedef struct {

@@ -24,7 +24,7 @@
 #include "creditos.h"
 #include "boss_final.h"
 
-void iniciarModoHistoria()
+int iniciarModoHistoria()
 {
     exibirNarrativaHistoria();
     screenInit(1);
@@ -53,7 +53,7 @@ void iniciarModoHistoria()
     int tecla = 0;
     int contador_frames = 0;
     int fps_atual = 0;
-    
+    int final = 0;
     int base_enemy_count = 2;
     int base_enemy_life = 2;
     int base_boss_life = 10;
@@ -64,7 +64,8 @@ void iniciarModoHistoria()
     int score = 0;
     int velocidade_inicial = 10;
     int velocidade_final = 0;
-    
+    int bordas_renovadas = 0;
+    int history_mode = 1;
     int recorde_atual = storageCarregarRecorde();
 
     const char *nomes_bosses[11] = {
@@ -77,7 +78,7 @@ void iniciarModoHistoria()
         "Assassino de memória",          
         "Sanguinário da tautologia",        
         "Destruidor da tabela verdade",         
-        "Malenia lamina de Utron",        
+        "Malenia lamina do Núcleo",        
         "NÚCLEO CORROMPIDO (O TENEBROSO)"       
     };
 
@@ -169,7 +170,7 @@ void iniciarModoHistoria()
 
             if (!boss_spawned && gi.quantidade == 0) {
                 boss_timer++;
-                if (boss_timer >= 100) {
+                if (boss_timer >= 50) {
                     if(level < 4){
                         velocidade_final = velocidade_inicial - (level > 1 ? (level-1) * 1.1: 0);
                         boss_life_final = base_boss_life * (1 << (level-1));
@@ -191,15 +192,22 @@ void iniciarModoHistoria()
                     uiLimparAreaInput();                
                     uiMostrarFeedback(mensagem_boss, RED, 2000, MAXX / 2 - 15, MAXY / 2);
                     if(level == 10){
+                        uiMostrarFeedback("*** NÚCLEO CORROMPIDO: ENTÃO VOCÊ DERROUTOU MEUS GUERREIROS?!! ***", RED, 4000, MAXX / 2 - 33, MAXY / 2);
+                        uiMostrarFeedback("*** NÚCLEO CORROMPIDO: NÃO IMPORTA!! ***", RED, 2000, MAXX / 2 - 15, MAXY / 2);
+                        uiMostrarFeedback("*** NÚCLEO CORROMPIDO: EU SEREI O SEU FIM!! ***", RED, 4000, MAXX / 2 - 25, MAXY / 2);
                         bossFinalIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, 
                          100, 
                          7, 
                          sl);
                     }
                     else{
+                        if(level == 1){
+                            uiMostrarFeedback("*** GUILHERME: A TABELA NA DIREITA TEM MAGIAS PODEROSAS!! ***", LIGHTCYAN, 3000, MAXX / 2 - 35, MAXY / 2);
+                            uiMostrarFeedback("*** DIEGO: USE NA HORA CERTA PARA DERROTAR O BOSS!! ***", LIGHTMAGENTA, 3000, MAXX / 2 - 33, MAXY / 2);
+                        }
                         bossIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, 
                                boss_life_final,velocidade_final, 
-                               sl); 
+                               level,sl); 
                     }
                     boss_spawned = 1;
                 }
@@ -230,8 +238,17 @@ void iniciarModoHistoria()
                                    base_enemy_count, base_enemy_life, velocidade_inicial);
             }
 
-            renderizarJogo(&jogador, &gp, &gi, &gb, &boss, boss_spawned, sl,level);
-
+            renderizarJogo(&jogador, &gp, &gi, &gb, &boss, boss_spawned, sl,level,bordas_renovadas,history_mode);
+            if(level == 5 && bordas_renovadas == 0){
+                bordas_renovadas = 1;
+                screenInit(1);
+                uiMostrarFeedback("***NÚCLEO CORROMPIDO: ESTOU VENDO QUE ESTÁ TENDO AJUDA! ***", RED, 4000, 
+                                         MAXX / 2 - 31, MAXY / 2 - 2);
+                uiMostrarFeedback("***NÚCLEO CORROMPIDO: ISSO SÓ MOSTRA QUANTO VOCÊ É FRACO! ***", RED, 4000, 
+                                         MAXX / 2 - 33, MAXY / 2 - 2); 
+                uiMostrarFeedback("***NÚCLEO CORROMPIDO: VAMOS VER COMO SE SAI AGORA! ***", RED, 4000, 
+                                         MAXX / 2 - 28, MAXY / 2 - 2);                      
+            }
             gerenciadorProjetilCompactar(&gp);
             gerenciadorInimigoCompactar(&gi);
             gerenciadorBauCompactar(&gb);
@@ -242,20 +259,20 @@ void iniciarModoHistoria()
                 contador_frames = 0;
             }
             
-            if (score > recorde_atual) {
-                recorde_atual = score;
-            }
-            
             uiDesenharHUDSuperior(score, level, jogador.lives, gi.quantidade, 
-                                 boss.ativo ? boss.vida : 0, gb.quantidade, fps_atual, recorde_atual);
+                                 boss.ativo ? boss.vida : 0, gb.quantidade, fps_atual, recorde_atual,history_mode);
             
             uiDesenharHUDInferior(px, py);
             screenUpdate();
         }
     }
 
-    if (jogador.lives <= 0) {
+    if (jogador.lives <= 0) {   
         screenClear();
+        uiMostrarFeedback("***NÚCLEO CORROMPIDO: EU SABIA QUE VOCÊ NÃO CONSEGUIRIA! ***", RED, 4000, 
+                                         MAXX / 2 - 33, MAXY / 2 - 2);
+        uiMostrarFeedback("***NÚCLEO CORROMPIDO: ESPERO TE HUMILHAR UMA OUTRA VEZ! ***", RED, 4000, 
+                                         MAXX / 2 - 33, MAXY / 2 - 2);  
         screenGotoxy(MAXX / 2 - 10, MAXY / 2 - 2);
         screenSetColor(RED, DARKGRAY);
         screenSetBold();
@@ -276,9 +293,8 @@ void iniciarModoHistoria()
     }
     else{
         exibirTelaFinal();
+        final = 1;
     }
-    
-    storageSalvarRecorde(recorde_atual);
 
     characterDestroy(&jogador);
     gerenciadorProjetilDestruir(&gp);
@@ -292,5 +308,5 @@ void iniciarModoHistoria()
     keyboardDestroy();
     screenDestroy();
     timerDestroy();
-    
+    return final;
 }
