@@ -3,4 +3,5 @@
 
 int exibirMenuPrincipal();
 
+int exibirMenuModoHistoria();
 #endif

@@ -6,13 +6,25 @@
 void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil *gp,
                           Character *jogador, SistemaLogica *sl, Boss *boss, 
                           GerenciadorBau *gb, int *boss_spawned, int *boss_timer, int *em_desafio,
-                          int base_enemy_count, int base_enemy_life, int velocidade_inicial) {
+                          int base_enemy_count, int base_enemy_life, int velocidade_inicial,int modo) {
     if (!level || !gi || !gp || !jogador || !sl || !boss || !gb) return;
     
     gb->quantidade = 0;
 
     (*level)++;
-    int new_enemy_count = (int)(base_enemy_count * (*level-1) * 0.5) + 1;
+    int new_enemy_count;
+    if(modo == 1){
+        new_enemy_count = (int)(base_enemy_count * (*level-1) * 0.3);
+    }
+    else if(modo == 2){
+        new_enemy_count = (int)(base_enemy_count * (*level-1) * 0.3) + 1;
+    }
+    else{
+        new_enemy_count = (int)(base_enemy_count * (*level-1) * 0.7) + 1;
+    }
+    if(new_enemy_count < 1){
+        new_enemy_count = 1;
+    }
 
     gerenciadorInimigoDestruir(gi);
     gerenciadorInimigoIniciar(gi, new_enemy_count);

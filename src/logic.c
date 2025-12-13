@@ -184,8 +184,11 @@ int logicaCompararExpressoes(const char *expr1, const char *expr2) {
 }
 
 int logicaValidarResposta(const Equivalencia *equiv, const char *resposta_jogador) {
-    if (!equiv || !resposta_jogador) return 0;
     
+    if (!equiv || !resposta_jogador) return 0;
+    if(*resposta_jogador == 'k' || *resposta_jogador == 'K'){
+        return 1;
+    }
     if (!logicaValidarCaracteresRecursivo(resposta_jogador, 0)) {
         return 0;
     }

@@ -39,7 +39,7 @@ void disparar4Direcoes(Boss *boss) {
     }
 }
 
-void bossFinalAtualizar(Boss *boss, int px, int py) {
+void bossFinalAtualizar(Boss *boss, int px, int py,int modo) {
     if (!boss || !boss->ativo) return;
 
     boss->contador_frames++;
@@ -55,7 +55,7 @@ void bossFinalAtualizar(Boss *boss, int px, int py) {
 
 
     boss->timer_tiro++;
-    if ((boss->timer_tiro >= 30 + (rand() % 20))&& boss->disparos ==1) { 
+    if ((boss->timer_tiro >= 60 - (modo*10) + (rand() % 30))&& boss->disparos ==1) { 
         disparar4Direcoes(boss);
         boss->timer_tiro = 0;
     }

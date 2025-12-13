@@ -10,6 +10,6 @@
 #include "screen.h"
 
 void renderizarJogo(Character *jogador, GerenciadorProjetil *gp, GerenciadorInimigo *gi, GerenciadorBau *gb,
-                    Boss *boss, int boss_spawned, SistemaLogica *sl,int level,int bordas_renovadas,int history_mode);
+                    Boss *boss, int boss_spawned, SistemaLogica *sl,int level,int bordas_renovadas,int history_mode,int modo);
 
 #endif /* __GAME_RENDER_H__ */

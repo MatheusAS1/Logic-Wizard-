@@ -110,7 +110,7 @@ void iniciarModoArcade()
                 desafioBauDesenharInterface(&desafio_bau);
             }
             else {
-                processarInputJogador(&jogador, &gp);
+                tecla = processarInputJogador(&jogador, &gp,2);
             }
 
             gerenciadorProjetilAtualizar(&gp);
@@ -160,7 +160,7 @@ void iniciarModoArcade()
 
             Boss boss_vazio;
             memset(&boss_vazio, 0, sizeof(Boss));
-            renderizarJogo(&jogador, &gp, &gi, &gb, &boss_vazio, 0, sl, level,bordas_renovadas,history_mode);
+            renderizarJogo(&jogador, &gp, &gi, &gb, &boss_vazio, 0, sl, level,bordas_renovadas,history_mode,0);
 
             gerenciadorProjetilCompactar(&gp);
             gerenciadorInimigoCompactar(&gi);

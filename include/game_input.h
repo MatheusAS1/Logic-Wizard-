@@ -4,6 +4,6 @@
 #include "character.h"
 #include "projectile.h"
 
-void processarInputJogador(Character *jogador, GerenciadorProjetil *gp);
-
+int processarInputJogador(Character *jogador, GerenciadorProjetil *gp,int modo);
+    
 #endif /* __GAME_INPUT_H__ */

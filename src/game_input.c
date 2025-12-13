@@ -2,8 +2,8 @@
 #include "keyboard.h"
 #include "screen.h"
 
-void processarInputJogador(Character *jogador, GerenciadorProjetil *gp) {
-    if (!jogador || !gp) return;
+int processarInputJogador(Character *jogador, GerenciadorProjetil *gp,int modo) {
+    if (!jogador || !gp) return 0;
     
     int tecla = 0;
     
@@ -32,7 +32,7 @@ void processarInputJogador(Character *jogador, GerenciadorProjetil *gp) {
             characterGetDir(jogador, &dir_x, &dir_y);
             int spawn_x = px_temp + (dir_x * 7);
             int spawn_y = py_temp + (dir_y * 2);
-            projetilCriar(gp, spawn_x, spawn_y, dir_x, dir_y);
+            projetilCriar(gp, spawn_x, spawn_y, dir_x, dir_y,modo);
         }
         
         if (tecla == 'F' || tecla == 'f') {
@@ -40,13 +40,15 @@ void processarInputJogador(Character *jogador, GerenciadorProjetil *gp) {
             characterGetPos(jogador, &px_temp, &py_temp);
 
             if (py_temp - 2 > MINY + 1)
-                projetilCriarEspecial(gp, px_temp, py_temp - 2, 0, -1);
+                projetilCriarEspecial(gp, px_temp, py_temp - 2, 0, -1,modo);
             if (py_temp + 2 < MAXY - 1)
-                projetilCriarEspecial(gp, px_temp, py_temp + 2, 0, 1);
+                projetilCriarEspecial(gp, px_temp, py_temp + 2, 0, 1,modo);
             if (px_temp - 2 > MINX + 1)
-                projetilCriarEspecial(gp, px_temp - 2, py_temp, -1, 0);
+                projetilCriarEspecial(gp, px_temp - 2, py_temp, -1, 0,modo);
             if (px_temp + 9 < MAXX - 3)
-                projetilCriarEspecial(gp, px_temp + 9, py_temp, 1, 0);
+                projetilCriarEspecial(gp, px_temp + 9, py_temp, 1, 0,modo);
         }
+        
     }
+    return tecla;
 }

@@ -6,7 +6,7 @@
 
 void bossFinalIniciar(Boss *boss, int x, int y, int vida, int velocidade, SistemaLogica *sl);
 
-void bossFinalAtualizar(Boss *boss, int px, int py);
+void bossFinalAtualizar(Boss *boss, int px, int py,int modo);
 
 void bossFinalDesenhar(const Boss *boss);
 

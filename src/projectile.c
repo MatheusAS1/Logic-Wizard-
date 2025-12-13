@@ -20,7 +20,7 @@ void gerenciadorProjetilDestruir(GerenciadorProjetil *gp)
     (void)gp;
 }
 
-void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
+void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy,int modo)
 {
     if (!gp || gp->quantidade_simples >= MAX_PROJETIL_SIMPLES) return;
 
@@ -34,7 +34,7 @@ void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
     p->aparencia = "*";
     p->contador_frames = 0;
     p->velocidade = VELOCIDADE_PROJETIL; 
-    p->dano = 1;
+    p->dano = 4-modo;
 
     gp->quantidade_simples++;
     
@@ -43,7 +43,7 @@ void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
     }
 }
 
-void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy)
+void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy,int modo)
 {
     if (!gp || gp->quantidade_especial >= MAX_PROJETIL_ESPECIAL) return;
 
@@ -64,7 +64,7 @@ void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy
     if (soundShootId >= 0) {
         audioPlaySound(soundShootId, 35);
     } 
-    p->dano = 4;
+    p->dano = 6-modo;
 
     gp->quantidade_especial++;
 }

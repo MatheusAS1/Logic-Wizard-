@@ -24,7 +24,7 @@
 #include "creditos.h"
 #include "boss_final.h"
 
-int iniciarModoHistoria()
+int iniciarModoHistoria(int modo)
 {
     exibirNarrativaHistoria();
     screenInit(1);
@@ -55,14 +55,19 @@ int iniciarModoHistoria()
     int fps_atual = 0;
     int final = 0;
     int base_enemy_count = 2;
-    int base_enemy_life = 2;
+    int base_enemy_life = 2*modo;
     int base_boss_life = 10;
+    int velocidade_inicial = 10;
+    if (modo==3){
+        base_boss_life = 30;
+        velocidade_inicial = 8;
+    }
     int boss_life_final = 0;
     int level = 1;
     int boss_spawned = 0;
     int boss_timer = 0;
     int score = 0;
-    int velocidade_inicial = 10;
+    
     int velocidade_final = 0;
     int bordas_renovadas = 0;
     int history_mode = 1;
@@ -145,7 +150,7 @@ int iniciarModoHistoria()
                 desafioBossDesenharInterface(&desafio_boss);
             }
             else {
-                processarInputJogador(&jogador, &gp);
+                tecla = processarInputJogador(&jogador, &gp,modo);
             }
 
             gerenciadorProjetilAtualizar(&gp);
@@ -154,7 +159,7 @@ int iniciarModoHistoria()
             if(!desafioBauEstaAtivo(&desafio_bau) && !desafioBossEstaAtivo(&desafio_boss)){
                 gerenciadorInimigoAtualizar(&gi, px, py);
                 if (boss.eh_final) {
-                    bossFinalAtualizar(&boss, px, py); 
+                    bossFinalAtualizar(&boss, px, py,modo); 
                     bossFinalVerificarColisaoTiro(&boss, &jogador); 
                 } else {
                     bossAtualizar(&boss, px, py);
@@ -176,34 +181,35 @@ int iniciarModoHistoria()
                         boss_life_final = base_boss_life * (1 << (level-1));
                     }
                     else if(level < 6){
-                        velocidade_final = 5;
-                        boss_life_final = boss_life_final + 10;
+                        velocidade_final = velocidade_inicial - modo - 1;
+                        boss_life_final = boss_life_final + (5*modo);
                     }
                     else if(level < 8){
-                        velocidade_final = 4;
-                        boss_life_final = boss_life_final + 8;
+                        velocidade_final = velocidade_inicial - modo - 2;
+                        boss_life_final = boss_life_final + (4*modo);
                     }
                     else{
-                        velocidade_final = 3;
-                        boss_life_final = boss_life_final + 8;
+                        velocidade_final = velocidade_inicial - modo - 3;
+                        boss_life_final = boss_life_final + (4*modo);
                     }
                     char mensagem_boss[64];
                     sprintf(mensagem_boss, "*** %s ***", nomes_bosses[level]);
                     uiLimparAreaInput();                
                     uiMostrarFeedback(mensagem_boss, RED, 2000, MAXX / 2 - 15, MAXY / 2);
                     if(level == 10){
-                        uiMostrarFeedback("*** NÚCLEO CORROMPIDO: ENTÃO VOCÊ DERROUTOU MEUS GUERREIROS?!! ***", RED, 4000, MAXX / 2 - 33, MAXY / 2);
+                        uiMostrarFeedback("*** NÚCLEO CORROMPIDO: ENTÃO VOCÊ DERROTOU MEUS GUERREIROS?!! ***", RED, 4000, MAXX / 2 - 33, MAXY / 2);
                         uiMostrarFeedback("*** NÚCLEO CORROMPIDO: NÃO IMPORTA!! ***", RED, 2000, MAXX / 2 - 15, MAXY / 2);
                         uiMostrarFeedback("*** NÚCLEO CORROMPIDO: EU SEREI O SEU FIM!! ***", RED, 4000, MAXX / 2 - 25, MAXY / 2);
+
                         bossFinalIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, 
-                         100, 
-                         7, 
+                         50*modo, 
+                         8-modo, 
                          sl);
                     }
                     else{
                         if(level == 1){
-                            uiMostrarFeedback("*** GUILHERME: A TABELA NA DIREITA TEM MAGIAS PODEROSAS!! ***", LIGHTCYAN, 3000, MAXX / 2 - 35, MAXY / 2);
-                            uiMostrarFeedback("*** DIEGO: USE NA HORA CERTA PARA DERROTAR O BOSS!! ***", LIGHTMAGENTA, 3000, MAXX / 2 - 33, MAXY / 2);
+                            // uiMostrarFeedback("*** GUILHERME: A TABELA NA DIREITA TEM MAGIAS PODEROSAS!! ***", LIGHTCYAN, 3000, MAXX / 2 - 35, MAXY / 2);
+                            // uiMostrarFeedback("*** DIEGO: USE NA HORA CERTA PARA DERROTAR O BOSS!! ***", LIGHTMAGENTA, 3000, MAXX / 2 - 33, MAXY / 2);
                         }
                         bossIniciar(&boss, (MINX + MAXX) / 2 - 3, MINY + 1, 
                                boss_life_final,velocidade_final, 
@@ -235,11 +241,11 @@ int iniciarModoHistoria()
                 int em_desafio_temp = 0;
                 avancarProximoLevel(&level, &gi, &gp, &jogador, sl, &boss, &gb,
                                    &boss_spawned, &boss_timer, &em_desafio_temp,
-                                   base_enemy_count, base_enemy_life, velocidade_inicial);
+                                   base_enemy_count, base_enemy_life, velocidade_inicial,modo);
             }
 
-            renderizarJogo(&jogador, &gp, &gi, &gb, &boss, boss_spawned, sl,level,bordas_renovadas,history_mode);
-            if(level == 5 && bordas_renovadas == 0){
+            renderizarJogo(&jogador, &gp, &gi, &gb, &boss, boss_spawned, sl,level,bordas_renovadas,history_mode,modo);
+            if(level == 5 && bordas_renovadas == 0 && modo == 2){
                 bordas_renovadas = 1;
                 screenInit(1);
                 uiMostrarFeedback("***NÚCLEO CORROMPIDO: ESTOU VENDO QUE ESTÁ TENDO AJUDA! ***", RED, 4000, 
@@ -267,7 +273,7 @@ int iniciarModoHistoria()
         }
     }
 
-    if (jogador.lives <= 0) {   
+    if (jogador.lives <= 0 || tecla == 27) {   
         screenClear();
         uiMostrarFeedback("***NÚCLEO CORROMPIDO: EU SABIA QUE VOCÊ NÃO CONSEGUIRIA! ***", RED, 4000, 
                                          MAXX / 2 - 33, MAXY / 2 - 2);

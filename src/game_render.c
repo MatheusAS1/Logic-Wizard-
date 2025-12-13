@@ -2,7 +2,7 @@
 
 void renderizarJogo(Character *jogador, GerenciadorProjetil *gp, 
                     GerenciadorInimigo *gi, GerenciadorBau *gb,
-                    Boss *boss, int boss_spawned, SistemaLogica *sl,int level, int bordas_renovadas,int history_mode) {
+                    Boss *boss, int boss_spawned, SistemaLogica *sl,int level, int bordas_renovadas,int history_mode,int modo) {
     if (!jogador || !gp || !gi || !gb || !sl) return;
     
     characterDraw(jogador);
@@ -19,10 +19,10 @@ void renderizarJogo(Character *jogador, GerenciadorProjetil *gp,
             bossDesenharEquivalencia(boss);
         }
     }
-    if(level < 5 && history_mode == 1){
+    if((level < 5 && history_mode == 1 && modo != 3) || (modo == 1 && history_mode == 1)){
         logicaDesenharTabela(sl);
     }
-    else if(bordas_renovadas == 0){
+    else if(bordas_renovadas == 0 && modo != 3 && modo != 1){
         logicaApagarTabela(sl);
 
     }

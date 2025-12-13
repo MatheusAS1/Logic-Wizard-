@@ -32,7 +32,8 @@ int main()
         
         switch(opcao) {
             case 1:
-                int final = iniciarModoHistoria(); 
+                int modo = exibirMenuModoHistoria();
+                int final = iniciarModoHistoria(modo); 
                 if(final == 1){
                     exibirCreditos();
                 }

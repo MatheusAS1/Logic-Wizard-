@@ -9,6 +9,6 @@
 #include "item.h"
 
 void avancarProximoLevel(int *level, GerenciadorInimigo *gi, GerenciadorProjetil *gp, Character *jogador, SistemaLogica *sl, Boss *boss, 
-                         GerenciadorBau *gb, int *boss_spawned, int *boss_timer, int *em_desafio, int base_enemy_count, int base_enemy_life, int velocidade_inicial);
+                         GerenciadorBau *gb, int *boss_spawned, int *boss_timer, int *em_desafio, int base_enemy_count, int base_enemy_life, int velocidade_inicial,int modo);
 
 #endif /* __GAME_PROGRESSION_H__ */

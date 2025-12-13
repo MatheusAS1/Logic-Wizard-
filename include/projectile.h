@@ -30,8 +30,8 @@ typedef struct {
 void gerenciadorProjetilIniciar(GerenciadorProjetil *gp);
 void gerenciadorProjetilDestruir(GerenciadorProjetil *gp);
 
-void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy);
-void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy);
+void projetilCriar(GerenciadorProjetil *gp, int x, int y, int dx, int dy,int modo);
+void projetilCriarEspecial(GerenciadorProjetil *gp, int x, int y, int dx, int dy,int modo);
 
 void gerenciadorProjetilDesenhar(const GerenciadorProjetil *gp);
 

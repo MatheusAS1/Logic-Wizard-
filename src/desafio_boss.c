@@ -101,6 +101,7 @@ int desafioBossProcessarInput(EstadoDesafioBoss *estado, Boss *boss,
 void desafioBossDesenharInterface(const EstadoDesafioBoss *estado) {
     if (!estado || !estado->ativo) return;
     
+    uiLimparAreaInput();
     screenGotoxy(MINX + 2, MAXY - 3);
     screenSetColor(YELLOW, DARKGRAY);
     screenSetBold();
